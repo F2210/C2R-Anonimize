@@ -1,0 +1,6 @@
+packaging
+flair
+torch
+ftlangdetect
+wget
+psycopg2-binary
