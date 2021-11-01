@@ -41,7 +41,7 @@ class NER:
 
         # retrieve models
         for key, model in nermodels.items():
-            (self.model, self.modeltype) = model
+            (self.model, self.modeltype, self.snomededition) = model
             self.nermodels[key] = (self.getModel())
 
     def getModel(self):

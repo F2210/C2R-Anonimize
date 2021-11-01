@@ -2,12 +2,12 @@ from django.db import models
 
 # Create your models here.
 class Client(models.Model):
-    client_id = models.CharField(max_length=20)
-    client_data = models.JSONField(null=True)
+    id = models.CharField(max_length=20)
+    data = models.JSONField(null=True)
 
 class Caregiver(models.Model):
-    caregiver_id = models.CharField(max_length=20)
-    caregiver_data = models.JSONField(null=True)
+    id = models.CharField(max_length=20)
+    data = models.JSONField(null=True)
 
 class Session(models.Model):
     identifier = models.CharField(max_length=20, null=True)

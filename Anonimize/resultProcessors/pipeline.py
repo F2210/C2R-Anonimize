@@ -7,6 +7,9 @@ def clean(text):
     return text
 
 def findEntity(resultdict, start, sentencewordid, entity, sentencedict):
+
+    print(resultdict)
+
     notFound = True
     index = start
     while notFound:

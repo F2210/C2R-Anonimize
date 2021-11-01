@@ -66,8 +66,8 @@ def sessionEndpoint(request, sessionID=None):
                 "response": "success",
                 "response_data": {
                     "sessionID": session.identifier,
-                    "clientID": session.client.client_id,
-                    "caregiverID": session.caregiver.caregiver_id,
+                    "clientID": session.client.id,
+                    "caregiverID": session.caregiver.id,
                     "original_text": original_returntext,
                     "anonimzed_text": replacement_returntext,
                     "anonimization_details": returnsentences,
@@ -97,7 +97,7 @@ def sessionEndpoint(request, sessionID=None):
             )
 
             if client[1]:
-                client[0].client_data = data["clientData"]
+                client[0].data = data["clientData"]
                 client[0].save()
 
             caregiver = Caregiver.objects.get_or_create(
@@ -105,7 +105,7 @@ def sessionEndpoint(request, sessionID=None):
             )
 
             if caregiver[1]:
-                caregiver[0].caregiver_data=data["caregiverData"]
+                caregiver[0].data=data["caregiverData"]
                 caregiver[0].save()
 
             session = Session.objects.create(
@@ -120,8 +120,8 @@ def sessionEndpoint(request, sessionID=None):
                 "response": "success",
                 "response_data": {
                     "sessionID": session.identifier,
-                    "clientID": session.caregiver.caregiver_id,
-                    "caregiverID": session.client.client_id,
+                    "clientID": session.caregiver.id,
+                    "caregiverID": session.client.id,
                     "session_status": session.status
                 }
             }
@@ -156,8 +156,8 @@ def sessionEndpoint(request, sessionID=None):
                     "response": "success",
                     "response_data": {
                         "sessionID": session.identifier,
-                        "clientID": session.client.client_id,
-                        "caregiverID": session.caregiver.caregiver_id,
+                        "clientID": session.client.id,
+                        "caregiverID": session.caregiver.id,
                         "original_text": original_returntext,
                         "anonimzed_text": replacement_returntext,
                         "anonimization_details": returnsentences,
