@@ -16,7 +16,18 @@ def findEntity(resultdict, start, sentencewordid, entity, sentencedict):
             break
         else:
             index -= 1
-    resultdict[sentencedict[index]] = entity["entity"]
+
+    label = entity["entity"]
+
+    if "PER" in label:
+        resultlabel = "PER"
+    elif "ORG" in label:
+        resultlabel = "ORG"
+    elif "LOC" in label:
+        resultlabel = "LOC"
+    elif "MISC" in label:
+        resultlabel = "MISC"
+    resultdict[sentencedict[index]] = resultlabel
 
     return resultdict
 

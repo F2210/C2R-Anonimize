@@ -1,9 +1,9 @@
 from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
 from flair.data import Sentence
 from flair.models import SequenceTagger
-from models import nermodels
-from resultProcessors import flair as flairType
-from resultProcessors import pipeline as pipelineType
+from .models import nermodels
+from .resultProcessors import flair as flairType
+from .resultProcessors import pipeline as pipelineType
 
 def nerPerformer(processdata, text):
     """
@@ -27,11 +27,9 @@ def nerPerformer(processdata, text):
     if z == "pipeline":
         ner = x
 
-        print(ner)
+        result = pipelineType.resultProcessor(text, ner(text))
 
-        result = pipelineType.resultProcessor(text, )
-
-        result = ner(text)
+    print(result)
 
     return result
 
@@ -45,8 +43,6 @@ class NER:
         for key, model in nermodels.items():
             (self.model, self.modeltype) = model
             self.nermodels[key] = (self.getModel())
-
-        print(nermodels)
 
     def getModel(self):
 

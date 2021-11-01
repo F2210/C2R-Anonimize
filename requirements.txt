@@ -2,5 +2,7 @@ packaging
 flair
 torch
 ftlangdetect
+langid
 wget
 psycopg2-binary
+django-q

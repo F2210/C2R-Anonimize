@@ -3,7 +3,7 @@ import sqlite3
 
 LOCAL = True
 
-def rewritequery(query):
+def rewritequery(query: str) -> str:
     if LOCAL:
         return query.replace("%s", "(?)")
     else:
