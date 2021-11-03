@@ -5,6 +5,7 @@ from .models import nermodels
 from .resultProcessors import flair as flairType
 from .resultProcessors import pipeline as pipelineType
 
+
 def nerPerformer(processdata, text):
     """
 

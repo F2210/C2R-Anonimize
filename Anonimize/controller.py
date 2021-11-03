@@ -32,9 +32,6 @@ class Anonimize(Process):
         self.snomed_version: str = ""
         super(Anonimize, self).__init__()
 
-    # def __str__(self):
-    #     print(dict(self.))
-
     def run(self):
 
         # do stuff
@@ -126,8 +123,7 @@ class Anonimize(Process):
             response = requests.get(url)
             data = response.json()
 
-            print(data)
+        #
 
     def NERApplier(self):
         pass
-
