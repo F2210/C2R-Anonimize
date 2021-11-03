@@ -111,8 +111,6 @@ class Anonimize(Process):
 
         # if item was found that was not captured by datamodel: add it to the entities lib.
 
-
-
     def EponymSearch(self):
 
         # set base data for snomed connection
