@@ -48,13 +48,10 @@ class Anonimize(Process):
         self.NERDetection()
         print(self)
 
-        self.NERProcessing()
+        self.NEProcessing()
         print(self)
 
-        self.EponymSearch()
-        print(self)
-
-        self.NERApplier()
+        self.NEApplier()
         print(self)
 
     def languageProcessor(self):
@@ -96,7 +93,7 @@ class Anonimize(Process):
         self.sentence.status = 2
         self.sentence.save()
 
-    def NERProcessing(self):
+    def NEProcessing(self):
 
         # check if data from client or caregiver are in the sentence and/or entities dict and store that inforation
         # as entity type 'personal data'
@@ -108,22 +105,19 @@ class Anonimize(Process):
 
         # if item was found that was not captured by datamodel: add it to the entities lib.
 
-    def EponymSearch(self):
+                # set base data for snomed connection
+                baseUrl = 'https://browser.ihtsdotools.org/snowstorm/snomed-ct'
+                # set edition to use using edition depending on language
+                edition = self.snomed_edition
+                # set version to use version set per language
+                version = self.snomed_version
 
-        # set base data for snomed connection
-        baseUrl = 'https://browser.ihtsdotools.org/snowstorm/snomed-ct'
-        # set edition to use using edition depending on language
-        edition = self.snomed_edition
-        # set version to use version set per language
-        version = self.snomed_version
+                # loop over entities found in the sentence
+                for entity in self.entities:
+                    url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
+                    response = requests.get(url)
+                    data = response.json()
 
-        # loop over entities found in the sentence
-        for entity in self.entities:
-            url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
-            response = requests.get(url)
-            data = response.json()
 
-        #
-
-    def NERApplier(self):
+    def NEApplier(self):
         pass
