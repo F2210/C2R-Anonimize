@@ -1,8 +1,10 @@
 packaging
 flair
 torch
-ftlangdetect
 langid
 wget
 psycopg2-binary
 django
+fuzzywuzzy
+abydos
+git+https://github.com/huggingface/transformers.git

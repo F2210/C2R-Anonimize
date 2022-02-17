@@ -23,45 +23,40 @@ def findEntity(resultdict, start, sentencewordid, entity, sentencedict):
     label = entity["entity"]
 
     if "PER" in label:
-        resultlabel = "PER"
-    elif "ORG" in label:
-        resultlabel = "ORG"
-    elif "LOC" in label:
-        resultlabel = "LOC"
-    elif "MISC" in label:
-        resultlabel = "MISC"
-    resultdict[sentencedict[index]] = resultlabel
+        resultdict[sentencedict[index]] = "PER"
 
     return resultdict
 
-def resultProcessor(text, result):
+def resultProcessor(text, results):
 
-        text = clean(text)
+    print(results)
 
-        sentencedict = {}
-        sentencelength = 0
-        for word in text.split(" "):
-            sentencedict[sentencelength] = word
-            sentencelength += len(word) + 1
+    text = clean(text)
 
-        sentencewordid = sentencedict.keys()
+    sentencedict = {}
+    sentencelength = 0
+    for word in text.split(" "):
+        sentencedict[sentencelength] = word
+        sentencelength += len(word) + 1
 
-        resultdict = {}
+    sentencewordid = sentencedict.keys()
 
-        try:
-            end = result[0]["end"]
-            counter = 0
-            for entity in result[1:]:
-                start = entity["start"]
-                if end == start:
-                    resultdict = findEntity(resultdict, start, sentencewordid, entity, sentencedict)
-                    counter += 1
-                elif counter == 0:
-                    resultdict = findEntity(resultdict, start, sentencewordid, entity, sentencedict)
-                else:
-                    counter = 0
-                    end = entity["start"]
-        except:
-            pass
+    resultdict = {}
 
-        return resultdict
+    try:
+        end = results[0]["end"]
+        counter = 0
+        for entity in results[1:]:
+            start = entity["start"]
+            if end == start:
+                resultdict = findEntity(resultdict, start, sentencewordid, entity, sentencedict)
+                counter += 1
+            elif counter == 0:
+                resultdict = findEntity(resultdict, start, sentencewordid, entity, sentencedict)
+            else:
+                counter = 0
+                end = entity["start"]
+    except:
+        pass
+
+    return resultdict

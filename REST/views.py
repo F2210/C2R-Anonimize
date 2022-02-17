@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 from REST.models import *
 import json
 from multiprocessing import Process
-from Anonimize.controller import Anonimize
+from Anonimize.controller import de_identify
 # Create your views here.
 
 @csrf_exempt
@@ -14,25 +15,9 @@ def sessionEndpoint(request, sessionID=None):
 
     :param request: request.body: {
         "sessionID": 1,
-        "clientID": 1,
-        "clientData": {
-            "firstname": "",
-            "lastname": "",
-            "address": "",
-            "nation": "",
-            "birthdate": "",
-        "caregiverID": 1,
-        "caregiverData": {
-            "firstname": "",
-            "lastname": "",
-            "address": "",
-            "nation": "",
-            "birthdate": "",
-        }
     }
     :return: {
         "sessionID": 0001,
-        "clientID": 0001,
         "status": 1
     }
     """
@@ -42,35 +27,32 @@ def sessionEndpoint(request, sessionID=None):
     if request.method == "GET":
 
         try:
-            session = Session.objects.get(
-                identifier=sessionID
-            )
+            session = Session.objects.get(Q(identifier=sessionID) | Q(id=sessionID))
 
-            sentences = Sentence.objects.filter(session=session)
+            textdata = TextData.objects.filter(session=session)
 
-            returnsentences = []
+            returntextdata = []
             replacement_returntext = ""
             original_returntext = ""
 
-            for sentence in sentences:
-                returnsentences.append({
-                    "original": sentence.original_text,
-                    "replaced": sentence.replacement_text,
-                    "entities": sentence.entities,
+            for textdata in textdata:
+                returntextdata.append({
+                    "original": textdata.original_text,
+                    "replaced": textdata.replacement_text,
+                    "entities": textdata.entities,
                 })
-                replacement_returntext += sentence.replacement_text + ". "
-                original_returntext += sentence.original_text + ". "
+                replacement_returntext += textdata.replacement_text + ". "
+                original_returntext += textdata.original_text + ". "
 
             returndata = {
                 "status_code": 200,
                 "response": "success",
                 "response_data": {
-                    "sessionID": session.identifier,
-                    "clientID": session.client.id,
-                    "caregiverID": session.caregiver.id,
+                    "ID": session.id,
+                    "customID": session.identifier,
                     "original_text": original_returntext,
                     "anonimzed_text": replacement_returntext,
-                    "anonimization_details": returnsentences,
+                    "anonimization_details": returntextdata,
                 }
             }
 
@@ -92,36 +74,18 @@ def sessionEndpoint(request, sessionID=None):
 
             data = json.loads(request.body)
 
-            client = Client.objects.get_or_create(
-                client_id=data["clientID"]
-            )
-
-            if client[1]:
-                client[0].data = data["clientData"]
-                client[0].save()
-
-            caregiver = Caregiver.objects.get_or_create(
-                caregiver_id=data["caregiverID"]
-            )
-
-            if caregiver[1]:
-                caregiver[0].data=data["caregiverData"]
-                caregiver[0].save()
-
-            session = Session.objects.create(
+            session = Session.objects.get_or_create(
                 identifier=data["sessionID"],
-                client=client[0],
-                caregiver=caregiver[0],
-                status=0
             )
+
+            session = session[0]
 
             returndata = {
                 "status_code": 200,
                 "response": "success",
                 "response_data": {
-                    "sessionID": session.identifier,
-                    "clientID": session.caregiver.id,
-                    "caregiverID": session.client.id,
+                    "ID": session.id,
+                    "customID": session.identifier,
                     "session_status": session.status
                 }
             }
@@ -136,36 +100,34 @@ def sessionEndpoint(request, sessionID=None):
 
             if session.status == 0:
 
-                sentences = Sentence.objects.filter(session=session)
+                textdata = TextData.objects.filter(session=session)
 
-                returnsentences = []
+                returntextdata = []
                 replacement_returntext = ""
                 original_returntext = ""
 
-                for sentence in sentences:
-                    returnsentences.append({
-                        "original": sentence.original_text,
-                        "replaced": sentence.replacement_text,
-                        "entities": sentence.entities,
+                for textdata in textdata:
+                    returntextdata.append({
+                        "original": textdata.original_text,
+                        "replaced": textdata.replacement_text,
+                        "entities": textdata.entities,
                     })
-                    replacement_returntext += sentence.replacement_text + ". "
-                    original_returntext += sentence.original_text + ". "
+                    replacement_returntext += textdata.replacement_text + ". "
+                    original_returntext += textdata.original_text + ". "
 
                 returndata = {
                     "status_code": 200,
                     "response": "success",
                     "response_data": {
-                        "sessionID": session.identifier,
-                        "clientID": session.client.id,
-                        "caregiverID": session.caregiver.id,
+                        "ID": session.id,
+                        "customID": session.identifier,
                         "original_text": original_returntext,
                         "anonimzed_text": replacement_returntext,
-                        "anonimization_details": returnsentences,
+                        "anonimization_details": returntextdata,
                     }
                 }
 
-                session.status = 1
-                session.save()
+                session.delete()
 
             else:
                 returndata = {
@@ -189,7 +151,7 @@ def sessionEndpoint(request, sessionID=None):
     return JsonResponse(returndata, status=returndata["status_code"])
 
 @csrf_exempt
-def sentenceEndpoint(request, sentenceID=None):
+def textdataDeEndpoint(request, textdataID=None):
     """
 
     :param request:
@@ -198,18 +160,18 @@ def sentenceEndpoint(request, sentenceID=None):
 
     if request.method == "GET":
 
-        sentence = Sentence.objects.get(id=sentenceID)
+        textdata = TextData.objects.get(Q(identifier=textdataID) | Q(id=textdataID))
 
         returndata = {
             "status_code": 200,
             "response": "success",
             "response_data": {
-                "sentenceID": sentence.pk,
-                "original_text": sentence.original_text,
-                "anonimized_text": sentence.replacement_text,
-                "entities": sentence.entities,
-                "sessionID": sentence.session.id,
-                "status": sentence.status
+                "textdataID": textdata.pk,
+                "original_text": textdata.original_text,
+                "anonimized_text": textdata.replacement_text,
+                "entities": textdata.entities,
+                "sessionID": textdata.session.id,
+                "status": textdata.status
             }
         }
 
@@ -218,19 +180,15 @@ def sentenceEndpoint(request, sentenceID=None):
         data = json.loads(request.body)
 
         try:
-            session = Session.objects.get(identifier=data["sessionID"])
+            session = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
 
-            sentence = Sentence.objects.create(
-                original_text=data["text"],
-                session=session
+            textdata = TextData.objects.create(
+                original_text=data["text"].lower(),
+                session=session,
+                type=False
             )
 
-            client = session.client
-            caregiver = session.caregiver
-
-            processingdata = (session, sentence, client, caregiver)
-
-            process = Anonimize(sentence, session, client, caregiver)
+            process = de_identify(textdata, session)
             process.daemon = True
             process.start()
 
@@ -238,11 +196,83 @@ def sentenceEndpoint(request, sentenceID=None):
                 "status_code": 200,
                 "response": "success",
                 "response_data": {
-                    "sentenceID": sentence.pk,
-                    "sentenceText": sentence.original_text,
-                    "status": sentence.status
+                    "textdataID": textdata.pk,
+                    "textdataText": textdata.original_text,
+                    "status": textdata.status
                 }
             }
+
+        except Session.DoesNotExist:
+            returndata = {
+                "status_code": 404,
+                "response": "failed",
+                "response_data": {
+                    "error": "Session not found."
+                }
+            }
+    else:
+        returndata = {
+            "status_code": 500,
+            "response": "failed",
+            "response_data": {
+                "error": "No method was found to support this request."
+            }
+        }
+
+    return JsonResponse(returndata, status=returndata["status_code"])
+
+@csrf_exempt
+def textdataReEndpoint(request, textdataID=None):
+    """
+
+    :param request:
+    :return:
+    """
+
+    if request.method == "GET":
+
+        textdata = TextData.objects.get(Q(identifier=textdataID) | Q(id=textdataID))
+
+        returndata = {
+            "status_code": 200,
+            "response": "success",
+            "response_data": {
+                "textdataID": textdata.pk,
+                "original_text": textdata.original_text,
+                "anonimized_text": textdata.replacement_text,
+                "entities": textdata.entities,
+                "sessionID": textdata.session.id,
+                "status": textdata.status
+            }
+        }
+
+    elif request.method == "POST":
+
+        data = json.loads(request.body)
+
+        try:
+            session = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
+
+            textdata = TextData.objects.create(
+                original_text=data["text"].lower(),
+                session=session,
+                type=True
+            )
+
+            process = de_identify(textdata, session)
+            process.daemon = True
+            process.start()
+
+            returndata = {
+                "status_code": 200,
+                "response": "success",
+                "response_data": {
+                    "textdataID": textdata.pk,
+                    "textdataText": textdata.original_text,
+                    "status": textdata.status
+                }
+            }
+
         except Session.DoesNotExist:
             returndata = {
                 "status_code": 404,

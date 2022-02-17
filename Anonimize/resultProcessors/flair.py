@@ -3,20 +3,19 @@ def resultProcessor(text, results):
 
     returnresults = {}
 
+    print(results)
+
     for result in results:
         result = result.to_dict()
 
         label = result["labels"][0].value
 
-        if "PER" in label:
-            resultlabel = "PER"
-        elif "ORG" in label:
-            resultlabel = "ORG"
-        elif "LOC" in label:
-            resultlabel = "LOC"
-        elif "MISC" in label:
-            resultlabel = "MISC"
+        if "I" in label:
+            print(label)
+        elif "B" in label:
+            print(label)
 
-        returnresults[result["text"]] = resultlabel
+        if "PER" in label:
+            returnresults[result["text"]] = "PER"
 
     return returnresults

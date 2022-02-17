@@ -1,3 +1,1 @@
-from controller import Anonimize
-
-
+from controller import de_identify

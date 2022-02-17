@@ -1,13 +1,15 @@
 import asyncio
+import random
 import time
 from REST.models import *
 from .db import *
-from .language import NER, nerPerformer
+from .language import NER, nerPerformer, debug
 from .models import nermodels
 import requests
 import json
 import langid
 from multiprocessing import Process
+from abydos.distance import LIG3
 
 # start connection to database
 cnx = startconnection()
@@ -15,22 +17,20 @@ cnx = startconnection()
 # load models into memory
 models = NER().nermodels
 
-class Anonimize(Process):
+class de_identify(Process):
 
-    def __init__(self, sentence, session, client, caregiver):
+    def __init__(self, sentence, session):
         
         # self.models = models
-        self.sentence: Sentence = Sentence.objects.get(id=sentence.id)
+        self.textdata: TextData = TextData.objects.get(id=sentence.id)
         self.session: Session = Session.objects.get(id=session.id)
-        self.client: Client = Client.objects.get(id=client.id)
-        self.caregiver: Caregiver = Caregiver.objects.get(id=caregiver.id)
         self.language: str = self.session.language
-        self.entities: list = []
+        self.entities: set = {i for i in Entity.objects.filter(session=self.session)}
         self.model: str = ""
         self.modeltype: str = ""
         self.snomed_edition: str = ""
         self.snomed_version: str = ""
-        super(Anonimize, self).__init__()
+        super(de_identify, self).__init__()
 
     def run(self):
 
@@ -44,15 +44,16 @@ class Anonimize(Process):
         step 4: anonimze the text with placeholders.
         """
         self.languageProcessor()
+        print(self.language)
 
         self.NERDetection()
-        print(self)
+        print(self.entities)
 
-        self.NEProcessing()
-        print(self)
+        self.EntityClassification()
+        print(self.entities)
 
         self.NEApplier()
-        print(self)
+        print(self.textdata.replacement_text)
 
     def languageProcessor(self):
 
@@ -61,7 +62,7 @@ class Anonimize(Process):
             language_code = self.session.language
         else:
             langid.set_languages(nermodels.keys())
-            language_code, score = langid.classify(self.sentence.original_text)
+            language_code, score = langid.classify(self.textdata.original_text)
 
         # Set language in class
         self.language = language_code
@@ -70,54 +71,105 @@ class Anonimize(Process):
 
         # Save language to database
         self.session.language = language_code
-        self.sentence.status = 1
+        self.textdata.status = 1
         self.session.save()
 
     def NERDetection(self):
 
-        # Perform NER detection on sentence
-        result_entities = nerPerformer(models[self.language], self.sentence.original_text)
+        if not debug:
+            # Perform NER detection on sentence
+            result_entities = nerPerformer(models[self.language], self.textdata.original_text)
 
-        # Store entities in database
-        self.sentence.entities = result_entities
-        self.sentence.save()
+            # Store entities in database
+            self.textdata.entities = result_entities
+            self.textdata.save()
+
+        else:
+            result_entities = Entity.objects.filter(session=self.session)
 
         # Go over entities to store them seperately
-
         for entity in result_entities:
-            entity_instance = Entity.objects.get_or_create(in_entity=entity, session=self.session, type_entity=result_entities[entity])
+            if not debug:
+                entity_instance = Entity.objects.get_or_create(in_entity=entity, session=self.session, type_entity=result_entities[entity])[0]
+            else:
+                entity_instance = entity
             # add created entity to class
-            self.entities.append(entity_instance)
+            self.entities.add(entity_instance)
 
         # Set status for sentence
-        self.sentence.status = 2
-        self.sentence.save()
+        self.textdata.status = 2
+        self.textdata.save()
 
-    def NEProcessing(self):
+    def EntityClassification(self):
 
-        # check if data from client or caregiver are in the sentence and/or entities dict and store that inforation
-        # as entity type 'personal data'
-        personal_attrs = ["firstname", "lastname", "address", "country"]
-        for person in [json.loads(self.client.data), json.loads(self.caregiver.data)]:
-            for attr in personal_attrs:
-                if person[attr] in self.entities:
-                    pass
+        # set base data for snomed connection
+        baseUrl = 'https://browser.ihtsdotools.org/snowstorm/snomed-ct'
+        # set edition to use using edition depending on language
+        edition = self.snomed_edition
+        # set version to use version set per language
+        version = self.snomed_version
 
-        # if item was found that was not captured by datamodel: add it to the entities lib.
+        # loop over entities found in the sentence
+        for entity in self.entities:
+            url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
 
-                # set base data for snomed connection
-                baseUrl = 'https://browser.ihtsdotools.org/snowstorm/snomed-ct'
-                # set edition to use using edition depending on language
-                edition = self.snomed_edition
-                # set version to use version set per language
-                version = self.snomed_version
+            response = requests.get(url)
 
-                # loop over entities found in the sentence
-                for entity in self.entities:
-                    url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
-                    response = requests.get(url)
-                    data = response.json()
+            SIMDISTANCE = 0.85
 
+            medical = False
+
+            for result in response.json()["result"]:
+                if entity in result["name"]:
+                    medical = True
+                for term in result["name"].split(" "):
+                    if LIG3().sim(src=term, tar=entity) > SIMDISTANCE:
+                        medical = True
+                else:
+                    medical = False
+
+            if medical:
+                entity.type_entity = "medical_domain"
+            else:
+                pass
 
     def NEApplier(self):
-        pass
+
+        # if the enity is not an eponym of a disease
+
+        for entity in self.entities:
+            names = ["Mark", "Tom", "Erik", "Peter"]
+
+            int = random.randint(0, 4)
+            if entity.out_entity is None:
+                entity.out_entity = names[int]
+                entity.save()
+
+        sentence = self.textdata.original_text
+
+        for entity in self.entities:
+            sentence = sentence.lower().replace(entity.in_entity.lower(), entity.out_entity.lower())
+
+        self.textdata.replacement_text = sentence
+        self.textdata.save()
+
+class re_identify(Process):
+
+    def __init__(self, sentence, session):
+        # self.models = models
+        self.textdata = TextData.objects.get(id=sentence.id)
+        self.retextdata: str = ""
+        self.session: Session = Session.objects.get(id=session.id)
+        self.entities: set = {i for i in Entity.objects.filter(session=self.session)}
+        super(re_identify, self).__init__()
+
+    def run(self):
+
+        textdata = self.textdata.original_text
+
+        for entity in self.entities:
+            if entity.out_entity in textdata:
+                textdata = textdata.replace(entity.out_entity, entity.in_entity)
+
+        self.textdata.replacement_text = textdata
+        self.textdata.save()

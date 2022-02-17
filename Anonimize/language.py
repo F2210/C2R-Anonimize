@@ -5,6 +5,7 @@ from .models import nermodels
 from .resultProcessors import flair as flairType
 from .resultProcessors import pipeline as pipelineType
 
+debug = False
 
 def nerPerformer(processdata, text):
     """
@@ -23,14 +24,14 @@ def nerPerformer(processdata, text):
 
         tagger.predict(sentence)
 
-        result = flairType.resultProcessor(text, sentence.get_spans('ner'))
+        rawresult = sentence.get_spans("ner")
+
+        result = flairType.resultProcessor(text, rawresult)
 
     if z == "pipeline":
         ner = x
 
         result = pipelineType.resultProcessor(text, ner(text))
-
-    print(result)
 
     return result
 
@@ -42,8 +43,11 @@ class NER:
 
         # retrieve models
         for key, model in nermodels.items():
-            (self.model, self.modeltype, self.snomededition) = model
-            self.nermodels[key] = (self.getModel())
+            (self.model, self.modeltype, self.snomededition, self.snomedreleasedate) = model
+            if not debug:
+                self.nermodels[key] = (self.getModel())
+            else:
+                self.nermodels[key] = ("", "", "")
 
     def getModel(self):
 

@@ -1,0 +1,38 @@
+[person, organisation, location]:Thomas is studying at Utrecht University.
+[("Thomas", "person"), ("Utrecht University", "organisation")]
+
+[person, organisation, location]:Mister Johnsson has some really bad back problems.
+[("Johnsson", "person")]
+
+[person, organisation, location]:He has been taken into a nursing home, I believe it was called Isabella Center.
+[("Isabella Center", "organisation")]
+
+[person, organisation, location]:Somehow I don't believe my friend really died this last summer.
+[]
+
+[person, organisation, location]:Tom was your name right.
+[("Tom", "person")]
+
+[person, organisation, location]:I do like some tea in the afternoon, some chinese tea please.
+[("chinese", "Location")]
+
+[person, organisation, location]:The hospital where I was taken is in New York I believe.
+[("New York", "Location")]
+
+[person, organisation, location]:For some reason my brother Paul is angry with me, but I still cannot understand why.
+[("Paul", "person")]
+
+[person, organisation, location]:I used to work for this mining company Shell.
+[("Shell", "organisations")]
+
+[person, organisation, location]:My doctor is a good man.
+[]
+
+[person, organisation, location]:People really think that I am deaf, but my hearing is just fine.
+[]
+
+[person, organisation, location]:Thomas, my grandson, studies Information Sciences at Columbia University, he is so smart.
+[("Thomas", "person"), ("Columbia", "Columbia University")]
+
+[person, organisation, location]:I do feel uncomfortable with this new disease going around, I rather stay home.
+[]
