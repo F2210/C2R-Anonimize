@@ -180,13 +180,24 @@ def textdataDeEndpoint(request, textdataID=None):
         data = json.loads(request.body)
 
         try:
-            session = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
+            sessiondbobj = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
 
-            textdata = TextData.objects.create(
-                original_text=data["text"].lower(),
-                session=session,
+            textdbobj = TextData.objects.create(
+                original_text=data["text"],
+                session=sessiondbobj,
                 type=False
             )
+
+            textdata = {
+                "id": textdbobj.pk,
+                "original_text": data["text"],
+                "sessionid": textdbobj.session.pk,
+            }
+
+            session = {
+                "id": sessiondbobj.pk,
+                "language": sessiondbobj.language
+            }
 
             process = de_identify(textdata, session)
             process.daemon = True
@@ -196,9 +207,9 @@ def textdataDeEndpoint(request, textdataID=None):
                 "status_code": 200,
                 "response": "success",
                 "response_data": {
-                    "textdataID": textdata.pk,
-                    "textdataText": textdata.original_text,
-                    "status": textdata.status
+                    "textdataID": textdbobj.pk,
+                    "textdataText": textdbobj.original_text,
+                    "status": textdbobj.status
                 }
             }
 
@@ -254,7 +265,7 @@ def textdataReEndpoint(request, textdataID=None):
             session = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
 
             textdata = TextData.objects.create(
-                original_text=data["text"].lower(),
+                original_text=data["text"],
                 session=session,
                 type=True
             )

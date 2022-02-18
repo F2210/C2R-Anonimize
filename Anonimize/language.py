@@ -10,7 +10,7 @@ debug = False
 def nerPerformer(processdata, text):
     """
 
-    :param processdata: tuple containing (pipeline or model, sentenceprocessor, modeltype)
+    :param processdata: tuple containing (pipeline or flair, sentenceprocessor, modeltype)
     :param text: string containing the to-be processed data
     :return: processed resultdata with each word and their type
     """
@@ -28,7 +28,7 @@ def nerPerformer(processdata, text):
 
         result = flairType.resultProcessor(text, rawresult)
 
-    if z == "pipeline":
+    if z == "transformer":
         ner = x
 
         result = pipelineType.resultProcessor(text, ner(text))
@@ -56,7 +56,7 @@ class NER:
 
             returnvalue = (tagger, Sentence, self.modeltype)
 
-        elif self.modeltype == "pipeline":
+        elif self.modeltype == "transformer":
             tokenizer = AutoTokenizer.from_pretrained(self.model)
             model = AutoModelForTokenClassification.from_pretrained(self.model)
 

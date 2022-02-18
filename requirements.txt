@@ -3,7 +3,6 @@ flair
 torch
 langid
 wget
-psycopg2-binary
 django
 fuzzywuzzy
 abydos

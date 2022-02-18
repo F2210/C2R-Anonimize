@@ -1,8 +1,12 @@
 import asyncio
 import random
 import time
+import uuid
+
+from .db import new_db_connection
+import torch
+
 from REST.models import *
-from .db import *
 from .language import NER, nerPerformer, debug
 from .models import nermodels
 import requests
@@ -11,21 +15,93 @@ import langid
 from multiprocessing import Process
 from abydos.distance import LIG3
 
-# start connection to database
-cnx = startconnection()
-
 # load models into memory
 models = NER().nermodels
 
+def updatevalue(table, column, id, value):
+
+    # print(table, column, id, value)
+
+    connection = new_db_connection()
+    with connection.cursor() as c:
+        c.execute(
+            'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
+            [value, str(id).replace("-", "")]
+        )
+        connection.close()
+
+def addentity(entity, sessionid, entitytype):
+    connection = new_db_connection()
+    with connection.cursor() as c:
+        c.execute(
+            'SELECT COUNT(id) FROM REST_entity '
+            'WHERE in_entity=%s ',
+            [entity]
+        )
+        result = c.fetchone()
+        connection.close()
+
+    (count, ) = result
+
+    connection = new_db_connection()
+    if count == 1:
+        with connection.cursor() as c:
+            c.execute(
+                'SELECT * FROM REST_entity '
+                'WHERE in_entity=%s ',
+                [entity]
+            )
+            result = dict(zip([column[0] for column in c.description], c.fetchone()))
+            connection.close()
+        return result
+
+    else:
+        with connection.cursor() as c:
+
+            textid = str(uuid.uuid4()).replace("-", "")
+
+            c.execute(
+                'INSERT INTO REST_entity'
+                '(id, in_entity, type_entity, session_id) VALUES '
+                '(%s, %s, %s, %s)',
+                [textid, entity, entitytype, str(sessionid).replace("-", "")]
+            )
+
+            # print("-----------------------")
+
+            connection.close()
+
+        return result
+
+def getentities(sessionid):
+    connection = new_db_connection()
+    with connection.cursor() as c:
+        c.execute(
+            'SELECT * FROM REST_entity '
+            'WHERE session_id=%s ',
+            [str(sessionid).replace("-", "")]
+        )
+        result = c.fetchall()
+        connection.close()
+
+    entities = []
+
+    for entity in result:
+        entities.append(dict(zip([column[0] for column in c.description], entity)))
+
+    # print(entities)
+
+    return entities
+
 class de_identify(Process):
 
-    def __init__(self, sentence, session):
+    def __init__(self, textdata, session):
         
         # self.models = models
-        self.textdata: TextData = TextData.objects.get(id=sentence.id)
-        self.session: Session = Session.objects.get(id=session.id)
-        self.language: str = self.session.language
-        self.entities: set = {i for i in Entity.objects.filter(session=self.session)}
+        self.textdata: dict = textdata
+        self.session: dict = session
+        self.language: str = self.session["language"]
+        self.entities: list = getentities(self.session["id"])
         self.model: str = ""
         self.modeltype: str = ""
         self.snomed_edition: str = ""
@@ -44,61 +120,51 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
         self.languageProcessor()
-        print(self.language)
+        # print(self.language)
 
         self.NERDetection()
-        print(self.entities)
+        # print(self.entities)
 
         self.EntityClassification()
-        print(self.entities)
+        # print(self.entities)
 
         self.NEApplier()
-        print(self.textdata.replacement_text)
+        # print(self.textdata["replacement_text"])
 
     def languageProcessor(self):
 
         # Check if the language was already known
-        if self.session.language is not None:
-            language_code = self.session.language
+        if self.language is not None:
+            language_code = self.session["language"]
         else:
             langid.set_languages(nermodels.keys())
-            language_code, score = langid.classify(self.textdata.original_text)
+            language_code, score = langid.classify(self.textdata["original_text"])
 
         # Set language in class
         self.language = language_code
 
         (self.model, self.modeltype, self.snomededition) = models[self.language]
 
-        # Save language to database
-        self.session.language = language_code
-        self.textdata.status = 1
-        self.session.save()
+        updatevalue("session", "language", self.session["id"], language_code)
+        updatevalue("textdata", "status", self.textdata["id"], 1)
 
     def NERDetection(self):
 
-        if not debug:
-            # Perform NER detection on sentence
-            result_entities = nerPerformer(models[self.language], self.textdata.original_text)
+        # Perform NER detection on sentence
+        result_entities = nerPerformer(models[self.language], self.textdata["original_text"])
 
-            # Store entities in database
-            self.textdata.entities = result_entities
-            self.textdata.save()
-
-        else:
-            result_entities = Entity.objects.filter(session=self.session)
+        # Store entities in database
+        updatevalue("textdata", "entities", self.textdata["id"], json.dumps(result_entities))
 
         # Go over entities to store them seperately
         for entity in result_entities:
-            if not debug:
-                entity_instance = Entity.objects.get_or_create(in_entity=entity, session=self.session, type_entity=result_entities[entity])[0]
-            else:
-                entity_instance = entity
+            entity = addentity(entity, self.session["id"], result_entities[entity])
             # add created entity to class
-            self.entities.add(entity_instance)
+
+        self.entities = getentities(self.session["id"])
 
         # Set status for sentence
-        self.textdata.status = 2
-        self.textdata.save()
+        updatevalue("textdata", "status", self.textdata["id"], 2)
 
     def EntityClassification(self):
 
@@ -111,27 +177,28 @@ class de_identify(Process):
 
         # loop over entities found in the sentence
         for entity in self.entities:
-            url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
-
-            response = requests.get(url)
-
-            SIMDISTANCE = 0.85
-
-            medical = False
-
-            for result in response.json()["result"]:
-                if entity in result["name"]:
-                    medical = True
-                for term in result["name"].split(" "):
-                    if LIG3().sim(src=term, tar=entity) > SIMDISTANCE:
-                        medical = True
-                else:
-                    medical = False
-
-            if medical:
-                entity.type_entity = "medical_domain"
-            else:
-                pass
+            pass
+            # url = baseUrl + '/browser/' + edition + '/' + version + '/concepts?term=' + entity.in_entity + '&activeFilter=true&offset=0&limit=50'
+            #
+            # response = requests.get(url)
+            #
+            # SIMDISTANCE = 0.85
+            #
+            # medical = False
+            #
+            # for result in response.json()["result"]:
+            #     if entity in result["name"]:
+            #         medical = True
+            #     for term in result["name"].split(" "):
+            #         if LIG3().sim(src=term, tar=entity) > SIMDISTANCE:
+            #             medical = True
+            #     else:
+            #         medical = False
+            #
+            # if medical:
+            #     entity.type_entity = "medical_domain"
+            # else:
+            #     pass
 
     def NEApplier(self):
 
@@ -140,18 +207,17 @@ class de_identify(Process):
         for entity in self.entities:
             names = ["Mark", "Tom", "Erik", "Peter"]
 
-            int = random.randint(0, 4)
-            if entity.out_entity is None:
-                entity.out_entity = names[int]
-                entity.save()
+            int = random.randint(0, 3)
+            if entity["out_entity"] is None:
+                updatevalue("entity", "out_entity", entity["id"], names[int])
 
-        sentence = self.textdata.original_text
+        sentence = self.textdata["original_text"]
 
         for entity in self.entities:
-            sentence = sentence.lower().replace(entity.in_entity.lower(), entity.out_entity.lower())
+            print(entity)
+            sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
-        self.textdata.replacement_text = sentence
-        self.textdata.save()
+        updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)
 
 class re_identify(Process):
 
