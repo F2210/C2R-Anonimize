@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import random
 import time
 import uuid
@@ -119,6 +120,9 @@ class de_identify(Process):
         step 3: classify the entities and decide whether they should be anonimized in the output after C2R processing.
         step 4: anonimze the text with placeholders.
         """
+
+        updatevalue("textdata", "time_start", self.textdata["id"], datetime.datetime.now().timestamp())
+
         self.languageProcessor()
         # print(self.language)
 
@@ -130,6 +134,8 @@ class de_identify(Process):
 
         self.NEApplier()
         # print(self.textdata["replacement_text"])
+
+        updatevalue("textdata", "time_end", self.textdata["id"], datetime.datetime.now().timestamp())
 
     def languageProcessor(self):
 
@@ -213,8 +219,10 @@ class de_identify(Process):
 
         sentence = self.textdata["original_text"]
 
+        self.entities = getentities(self.session["id"])
+
         for entity in self.entities:
-            print(entity)
+            # print(entity)
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
         updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)

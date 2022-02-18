@@ -29,8 +29,8 @@ for sentence in sentences:
           stop="]",
       )
 
-  print(response)
+  # print(response)
 
   string = response["choices"][0]["text"].strip() + "]"
 
-  print("##################" + string + "##################")
+  # print("##################" + string + "##################")

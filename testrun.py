@@ -1,6 +1,4 @@
-import random
-
-import requests
+import random, requests, time
 
 sentences = """
 Hoi Hoi Hoi Ik ben Jacco. Hoi aangenaam, Ik ben dr Vreeswijk. Wat kan ik voor je doen? Maar ja, hoi, Ik heb last van mijn scheenbeen. Ik weet eigenlijk 1 grote rode plek en Ik weet niet echt wat het is. Oké, Laten we dan eens gaan kijken waar je last van heeft, meneer Broeren. Elk team naar de wandeling tafel gaat hij daar maar zitten, kijken ik even? Oké, Dit is inderdaad een rode plek. Doet het pijn Als ik hier duw? Klein beetje het zeurt wat. En Als ik hier duw? Ja dat doet pijn. Oké ga er maar weer zitten. U heeft een onderhuids ontsteking. Mocht die groter worden, of als u last van koorts krijgt, dan moet u even de huisarts weer bellen en dan. Moeten we even opnieuw kijken? Misschien moet u dan antibiotica? Maar volgens nog? Ziet er goed uit. Omcirkelde plek die je rood is en doe dat dan over 24 uur. Nog een keer moment dat het dan dus groter is geworden. Dan mag u even contact opnemen. Oke bedankt. Tot ziens. Tot ziens.
@@ -59,3 +57,5 @@ for text in sentences.split("."):
             timeout=0.0000000001)
     except requests.exceptions.ReadTimeout:
         pass
+
+    time.sleep(2)

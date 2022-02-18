@@ -3,7 +3,7 @@ def resultProcessor(text, results):
 
     returnresults = {}
 
-    print(results)
+    # print(results)
 
     for result in results:
         result = result.to_dict()
@@ -11,9 +11,11 @@ def resultProcessor(text, results):
         label = result["labels"][0].value
 
         if "I" in label:
-            print(label)
+            pass
+            # print(label)
         elif "B" in label:
-            print(label)
+            pass
+            # print(label)
 
         if "PER" in label:
             returnresults[result["text"]] = "PER"

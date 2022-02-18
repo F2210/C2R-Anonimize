@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import uuid
 
 # Create your models here.
@@ -22,6 +23,8 @@ class TextData(models.Model):
     entities = models.JSONField(null=True)
     replacement_text = models.TextField(null=True)
     type = models.BooleanField(default=False) # False = to de-identify / True = to re-identify
+    time_start = models.BigIntegerField(null=True)
+    time_end = models.BigIntegerField(null=True)
 
 class Entity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

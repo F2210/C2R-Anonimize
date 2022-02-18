@@ -24,7 +24,7 @@ def resultProcessor(text, results):
 
     resultdict = {}
 
-    print(results)
+    # print(results)
 
     for entity in results:
         resultdict = findEntity(resultdict, text, entity)
