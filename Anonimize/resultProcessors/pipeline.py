@@ -46,11 +46,12 @@ def resultProcessor(text, results):
 
             print(char)
             while char != " " or char != "." or char != ",":
-                print(char)
                 print(endslice)
                 if endslice < len(text):
                     char = text[endslice]
                 else:
+                    char = " "
+                if endslice > 100:
                     char = " "
                 endslice += 1
 
