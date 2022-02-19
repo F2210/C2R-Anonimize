@@ -45,9 +45,9 @@ def resultProcessor(text, results):
             char = text[endslice]
 
             while char != " " or char != "." or char != ",":
-                try:
+                if endslice < len(text):
                     char = text[endslice]
-                except IndexError:
+                else:
                     char = " "
                 endslice += 1
 
