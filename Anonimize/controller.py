@@ -33,6 +33,7 @@ def updatevalue(table, column, id, value):
 
 def addentity(entity, sessionid, entitytype):
 
+    print("adding entity")
     connection = new_db_connection()
     with connection.cursor() as c:
         c.execute(
