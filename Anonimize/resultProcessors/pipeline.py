@@ -37,7 +37,12 @@ def resultProcessor(text, results):
 
             endslice = entityset[0]["end"] if len(entityset) > 0 else entity["end"]
 
-            char = text[endslice]
+            try:
+                char = text[endslice]
+
+            except IndexError:
+                print(text, endslice)
+
             while char != " " or char != "." or char != ",":
                 try:
                     char = text[endslice]
