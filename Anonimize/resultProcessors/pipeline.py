@@ -41,18 +41,17 @@ def resultProcessor(text, results):
 
             endslice = entityset[0]["end"] if len(entityset) > 0 else entity["end"]
 
-
             char = text[endslice]
 
-            print(char)
             while char != " " or char != "." or char != ",":
+                print(" " == char)
                 print(endslice)
                 if endslice < len(text):
                     char = text[endslice]
                 else:
                     char = " "
                 if endslice > 100:
-                    char = " "
+                    break
                 endslice += 1
 
             print("yeeehaw")
