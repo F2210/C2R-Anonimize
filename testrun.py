@@ -60,9 +60,9 @@ for texts in sentences.split("."):
         except requests.exceptions.ConnectTimeout:
             pass
 
-        time.sleep(2)
-        if counter == 8:
+        if counter == 3:
             counter = 0
+            time.sleep(2)
 
         counter += 1
 

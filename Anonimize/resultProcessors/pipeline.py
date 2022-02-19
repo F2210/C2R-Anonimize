@@ -14,10 +14,7 @@ def findEntity(resultdict, text, entity):
 
     word = text[startofword:endofword].replace(",", "")
 
-    label = entity["entity"]
-
-    if "PER".lower() in label.lower():
-        resultdict[word] = "PER"
+    resultdict[word] = "PER"
 
     return resultdict
 
@@ -67,12 +64,14 @@ def resultProcessor(text, results):
             endslice -= 1
             entityset = []
 
-            processedresults.append({
-                "start": entity["start"],
-                "end": endslice,
-                "entity": "PER",
-                "length": len(entityset) + 1
-            })
+            if "PER".lower() in entity["entity"].lower():
+
+                processedresults.append({
+                    "start": entity["start"],
+                    "end": endslice,
+                    "entity": "PER",
+                    "length": len(entityset) + 1
+                })
 
     for entity in processedresults:
         print("finding: ", entity)
