@@ -43,13 +43,14 @@ def resultProcessor(text, results):
 
             char = text[endslice]
 
-            while char != " " or char != "." or char != ",":
-                print(endslice)
+            notFound = True
+            while notFound:
                 if endslice < len(text):
                     char = text[endslice]
                 else:
-                    endslice += 1
-                    break
+                    char = " "
+                if char == " " or char != "." or char != ",":
+                    notFound = False
                 endslice += 1
 
             print("yeeehaw")
