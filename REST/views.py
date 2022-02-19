@@ -199,6 +199,7 @@ def textdataDeEndpoint(request, textdataID=None):
                 "language": sessiondbobj.language
             }
 
+            print("starting processing")
             process = de_identify(textdata, session)
             process.daemon = True
             process.start()

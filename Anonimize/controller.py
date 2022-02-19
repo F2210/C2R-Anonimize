@@ -122,17 +122,22 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
+        print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
+        print("set language id")
         self.languageProcessor()
         # print(self.language)
 
+        print("detect entities")
         self.NERDetection()
         # print(self.entities)
 
+        print("classify entities")
         self.EntityClassification()
         # print(self.entities)
 
+        print("apply de-identitfy")
         self.NEApplier()
         # print(self.textdata["replacement_text"])
 
