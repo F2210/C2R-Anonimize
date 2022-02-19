@@ -55,7 +55,7 @@ def resultProcessor(text, results):
 
             notFound = True
             while notFound:
-                if endslice < len(text):
+                if endslice <= len(text):
                     char = text[endslice]
                 else:
                     char = " "
