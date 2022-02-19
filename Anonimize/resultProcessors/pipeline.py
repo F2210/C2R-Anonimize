@@ -29,6 +29,9 @@ def resultProcessor(text, results):
 
     print("processing results")
     processedresults = []
+
+    print(results)
+
     for entity in results[::-1]:
 
         if "I" in entity["entity"]:
@@ -38,6 +41,7 @@ def resultProcessor(text, results):
 
             endslice = entityset[0]["end"] if len(entityset) > 0 else entity["end"]
 
+            print(text, endslice)
             try:
                 char = text[endslice]
 
