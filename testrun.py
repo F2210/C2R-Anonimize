@@ -35,9 +35,9 @@ Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 
 counter = 0
 
-sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": "15615"}).json()["response_data"]["ID"]
-sesh2 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": "15616"}).json()["response_data"]["ID"]
-sesh3 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": "15617"}).json()["response_data"]["ID"]
+sesh1 = requests.post("http://192.168.1.175/sessiondata?type=open", json={"sessionID": "15615"}).json()["response_data"]["ID"]
+sesh2 = requests.post("http://192.168.1.175/sessiondata?type=open", json={"sessionID": "15616"}).json()["response_data"]["ID"]
+sesh3 = requests.post("http://192.168.1.175/sessiondata?type=open", json={"sessionID": "15617"}).json()["response_data"]["ID"]
 
 for texts in sentences.split("."):
     for text in texts.split("?"):
@@ -48,7 +48,7 @@ for texts in sentences.split("."):
 
         try:
             requests.post(
-                "http://192.168.1.175:8001/textdedata",
+                "http://192.168.1.175/textdedata",
                 json={
                     "text": text,
                     "sessionID": sesh[seshselect]
