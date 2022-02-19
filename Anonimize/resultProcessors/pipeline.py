@@ -41,7 +41,7 @@ def resultProcessor(text, results):
 
             endslice = entityset[0]["end"] if len(entityset) > 0 else entity["end"]
 
-            if endslice >= len(text):
+            if endslice > len(text):
                 endslice = len(text)-1
                 char = text[endslice]
             else:
