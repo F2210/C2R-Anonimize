@@ -23,7 +23,7 @@ def findEntity(resultdict, text, entity):
 
 def resultProcessor(text, results):
 
-    text += " "
+    text = text + " "
 
     resultdict = {}
 
