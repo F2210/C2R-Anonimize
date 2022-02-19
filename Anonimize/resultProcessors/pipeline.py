@@ -54,11 +54,11 @@ def resultProcessor(text, results):
             #     print("------------")
             # else:
             #     char = text[endslice]
-            char = text[endslice]
 
             notFound = True
             while notFound:
-                if char == " " or char != "." or char != ",":
+                char = text[endslice]
+                if char == " " or char == "." or char == ",":
                     notFound = False
                 endslice += 1
 
