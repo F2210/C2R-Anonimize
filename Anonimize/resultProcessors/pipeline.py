@@ -41,6 +41,7 @@ def resultProcessor(text, results):
                 char = text[endslice]
 
             except IndexError:
+                char = "a"
                 print(text, endslice)
 
             while char != " " or char != "." or char != ",":
