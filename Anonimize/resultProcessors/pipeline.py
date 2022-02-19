@@ -23,6 +23,8 @@ def findEntity(resultdict, text, entity):
 
 def resultProcessor(text, results):
 
+    text += " "
+
     resultdict = {}
 
     entityset = []
@@ -56,10 +58,6 @@ def resultProcessor(text, results):
 
             notFound = True
             while notFound:
-                if endslice <= len(text):
-                    char = text[endslice]
-                else:
-                    char = " "
                 if char == " " or char != "." or char != ",":
                     notFound = False
                 endslice += 1
