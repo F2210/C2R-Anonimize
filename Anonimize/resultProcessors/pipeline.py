@@ -64,7 +64,7 @@ def resultProcessor(text, results):
             })
 
     for entity in processedresults:
-
+        print("finding: ", entity)
         resultdict = findEntity(resultdict, text, entity)
 
     print("processed results")
