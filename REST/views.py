@@ -160,7 +160,7 @@ def textdataDeEndpoint(request, textdataID=None):
 
     if request.method == "GET":
 
-        textdata = TextData.objects.get(Q(identifier=textdataID) | Q(id=textdataID))
+        textdata = TextData.objects.get(id=textdataID)
 
         returndata = {
             "status_code": 200,
@@ -180,7 +180,7 @@ def textdataDeEndpoint(request, textdataID=None):
         data = json.loads(request.body)
 
         try:
-            sessiondbobj = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
+            sessiondbobj = Session.objects.get(id=data["sessionID"])
 
             textdbobj = TextData.objects.create(
                 original_text=data["text"],
@@ -242,7 +242,7 @@ def textdataReEndpoint(request, textdataID=None):
 
     if request.method == "GET":
 
-        textdata = TextData.objects.get(Q(identifier=textdataID) | Q(id=textdataID))
+        textdata = TextData.objects.get(id=textdataID)
 
         returndata = {
             "status_code": 200,
@@ -262,7 +262,7 @@ def textdataReEndpoint(request, textdataID=None):
         data = json.loads(request.body)
 
         try:
-            session = Session.objects.get(Q(identifier=data["sessionID"]) | Q(id=data["sessionID"]))
+            session = Session.objects.get(id=data["sessionID"])
 
             textdata = TextData.objects.create(
                 original_text=data["text"],

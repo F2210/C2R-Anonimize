@@ -32,6 +32,7 @@ def updatevalue(table, column, id, value):
         connection.close()
 
 def addentity(entity, sessionid, entitytype):
+
     connection = new_db_connection()
     with connection.cursor() as c:
         c.execute(
@@ -121,7 +122,7 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
-        updatevalue("textdata", "time_start", self.textdata["id"], datetime.datetime.now().timestamp())
+        updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         self.languageProcessor()
         # print(self.language)
@@ -135,7 +136,7 @@ class de_identify(Process):
         self.NEApplier()
         # print(self.textdata["replacement_text"])
 
-        updatevalue("textdata", "time_end", self.textdata["id"], datetime.datetime.now().timestamp())
+        updatevalue("textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
     def languageProcessor(self):
 
@@ -164,7 +165,7 @@ class de_identify(Process):
 
         # Go over entities to store them seperately
         for entity in result_entities:
-            entity = addentity(entity, self.session["id"], result_entities[entity])
+            addentity(entity, self.session["id"], result_entities[entity])
             # add created entity to class
 
         self.entities = getentities(self.session["id"])
@@ -222,7 +223,6 @@ class de_identify(Process):
         self.entities = getentities(self.session["id"])
 
         for entity in self.entities:
-            # print(entity)
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
         updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)

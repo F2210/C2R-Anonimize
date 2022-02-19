@@ -10,8 +10,9 @@ def findEntity(resultdict, text, entity):
 
     startofword = entity["start"]
 
-    text = text[startofword:]
-    word = text.split(" ")[0].replace(",", "")
+    endofword = entity["end"]
+
+    word = text[startofword:endofword].replace(",", "")
 
     label = entity["entity"]
 
@@ -24,9 +25,40 @@ def resultProcessor(text, results):
 
     resultdict = {}
 
-    # print(results)
+    entityset = []
 
-    for entity in results:
+    processedresults = []
+    for entity in results[::-1]:
+
+        if "I" in entity["entity"]:
+            entityset.append(entity)
+
+        if "B" in entity["entity"]:
+
+            endslice = entityset[0]["end"] if len(entityset) > 0 else entity["end"]
+
+            char = text[endslice]
+            while char != " " or char != "." or char != ",":
+                try:
+                    char = text[endslice]
+                except IndexError:
+                    char = " "
+                endslice += 1
+
+            print("yeeehaw")
+
+            endslice -= 1
+            entityset = []
+
+            processedresults.append({
+                "start": entity["start"],
+                "end": endslice,
+                "entity": "PER",
+                "length": len(entityset) + 1
+            })
+
+    for entity in processedresults:
+
         resultdict = findEntity(resultdict, text, entity)
 
     return resultdict

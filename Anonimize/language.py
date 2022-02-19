@@ -16,6 +16,8 @@ def nerPerformer(processdata, text):
     """
     (x, y, z) = processdata
 
+    result = None
+
     if z == "flair":
         tagger = x
         Sentence = y
@@ -24,7 +26,7 @@ def nerPerformer(processdata, text):
 
         tagger.predict(sentence)
 
-        rawresult = sentence.get_spans("ner")
+        rawresult = sentence
 
         result = flairType.resultProcessor(text, rawresult)
 
@@ -32,6 +34,9 @@ def nerPerformer(processdata, text):
         ner = x
 
         result = pipelineType.resultProcessor(text, ner(text))
+
+    if result is None:
+        Exception("The model was not set correctly. The type has to be either Flair or Transformer.")
 
     return result
 
@@ -51,6 +56,8 @@ class NER:
 
     def getModel(self):
 
+        returnvalue = None
+
         if self.modeltype == "flair":
             tagger = SequenceTagger.load(self.model)
 
@@ -63,5 +70,8 @@ class NER:
             ner = pipeline("ner", model=model, tokenizer=tokenizer)
 
             returnvalue = (ner, "", self.modeltype)
+
+        if returnvalue is None:
+            Exception("The model was not set correctly. The type has to be either Flair or Transformer.")
 
         return returnvalue

@@ -7,7 +7,7 @@ urlpatterns = [
     path('sessiondata', sessionEndpoint),
     path('sessiondata/<str:sessionID>/', sessionEndpoint),
     path('textdedata', textdataDeEndpoint),
-    path('textdedata/<str:sentenceID>/', textdataDeEndpoint),
+    path('textdedata/<str:textdataID>/', textdataDeEndpoint),
     path('textredata', textdataReEndpoint),
-    path('textredata/<str:sentenceID>/', textdataReEndpoint),
+    path('textredata/<str:textdataID>/', textdataReEndpoint),
 ]
