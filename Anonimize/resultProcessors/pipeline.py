@@ -46,7 +46,8 @@ def resultProcessor(text, results):
 
             print(char)
             while char != " " or char != "." or char != ",":
-                print("searching")
+                print(char)
+                print(endslice)
                 if endslice < len(text):
                     char = text[endslice]
                 else:
