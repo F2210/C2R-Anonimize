@@ -48,13 +48,16 @@ for texts in sentences.split("."):
 
         try:
             requests.post(
-                "http://localhost:8001/textdedata",
+                "http://192.168.1.175:8001/textdedata",
                 json={
                     "text": text,
                     "sessionID": sesh[seshselect]
                 },
                 timeout=0.0000000001)
         except requests.exceptions.ReadTimeout:
+            pass
+
+        except requests.exceptions.ConnectTimeout:
             pass
 
         if counter == 8:
