@@ -48,9 +48,6 @@ def resultProcessor(text, results):
                 if endslice < len(text):
                     char = text[endslice]
                 else:
-                    char = " "
-                print(" " == char)
-                if endslice > 100:
                     break
                 endslice += 1
 
