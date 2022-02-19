@@ -6,4 +6,5 @@ wget
 django
 fuzzywuzzy
 abydos
+mysqlclient
 git+https://github.com/huggingface/transformers.git
