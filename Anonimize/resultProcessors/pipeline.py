@@ -43,6 +43,7 @@ def resultProcessor(text, results):
 
             if endslice >= len(text):
                 endslice = len(text)-1
+                char = text[endslice]
             else:
                 char = text[endslice]
 
