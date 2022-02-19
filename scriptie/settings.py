@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'scriptie.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sample',
+        'NAME': 'restdb',
         'HOST': 'localhost',
         'PORT': '3306',
         'USER': 'root',
