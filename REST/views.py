@@ -35,7 +35,7 @@ def sessionEndpoint(request, sessionID=None):
             replacement_returntext = ""
             original_returntext = ""
 
-            errorsentences: set = {}
+            errorsentences: set = set({})
 
             for textdata in textdata:
                 returntextdata.append({
