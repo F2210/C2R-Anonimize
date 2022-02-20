@@ -46,12 +46,12 @@ def sessionEndpoint(request, sessionID=None):
                 try:
                     replacement_returntext += textdata.replacement_text.strip() + " "
                 except:
-                    replacement_returntext += "ERROR {'sentence': '" + textdata.pk + "'}"
+                    replacement_returntext += "ERROR {'sentence': '" + str(textdata.pk) + "'}"
                     errorsentences.add(textdata.pk)
                 try:
                     original_returntext += textdata.original_text.strip() + " "
                 except:
-                    original_returntext += "ERROR {'sentence': '" + textdata.pk + "'}"
+                    original_returntext += "ERROR {'sentence': '" + str(textdata.pk) + "'}"
                     errorsentences.add(textdata.pk)
 
             returndata = {
