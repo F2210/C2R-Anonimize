@@ -35,6 +35,8 @@ def sessionEndpoint(request, sessionID=None):
             replacement_returntext = ""
             original_returntext = ""
 
+            errorsentences: set = {}
+
             for textdata in textdata:
                 returntextdata.append({
                     "original": textdata.original_text,
@@ -44,11 +46,13 @@ def sessionEndpoint(request, sessionID=None):
                 try:
                     replacement_returntext += textdata.replacement_text.strip() + " "
                 except:
-                    replacement_returntext += "ERROR"
+                    replacement_returntext += "ERROR {'sentence': '" + textdata.pk + "'}"
+                    errorsentences.add(textdata.pk)
                 try:
                     original_returntext += textdata.original_text.strip() + " "
                 except:
-                    original_returntext += "ERROR"
+                    original_returntext += "ERROR {'sentence': '" + textdata.pk + "'}"
+                    errorsentences.add(textdata.pk)
 
             returndata = {
                 "status_code": 200,
@@ -59,6 +63,7 @@ def sessionEndpoint(request, sessionID=None):
                     "original_text": original_returntext,
                     "anonimzed_text": replacement_returntext,
                     "anonimization_details": returntextdata,
+                    "errorsentences": list(errorsentences),
                 }
             }
 
