@@ -37,15 +37,19 @@ Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 
 counter = 0
 
-sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"]["ID"]
-sesh2 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": str(datetime.datetime.now().timestamp() + 2)}).json()["response_data"]["ID"]
-sesh3 = requests.post("http://192.168.1.175:8001/sessiondata?type=open", json={"sessionID": str(datetime.datetime.now().timestamp() + 3)}).json()["response_data"]["ID"]
+def testerConvo():
+    sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"][
+        "ID"]
+    sesh2 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 2)}).json()["response_data"][
+        "ID"]
+    sesh3 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 3)}).json()["response_data"][
+        "ID"]
 
-convos = [conv1, conv2, conv3]
-
-print((len(i) for i in convos))
-
-def tester():
+    convos = [conv1, conv2, conv3]
+    seshs = [sesh1, sesh2, sesh3]
 
     errorcount = 0
     sentencecount = 0
@@ -58,9 +62,9 @@ def tester():
                         "http://192.168.1.175:8001/textdedata",
                         json={
                             "text": convos[conv][sentencecount],
-                            "sessionID": sesh1
+                            "sessionID": seshs[conv]
                         },
-                        timeout=0.33333)
+                        timeout=0.000000001)
                 except requests.exceptions.ConnectTimeout:
                     pass
                 except requests.exceptions.ReadTimeout:
@@ -79,5 +83,25 @@ def tester():
             if errorcount == 3:
                 return ""
 
-tester()
+# testerConvo()
+
+def testerNER():
+
+    sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
+        "ID"]
+
+    for sentence in nersentence.split("\n"):
+
+        requests.post(
+            "http://192.168.1.175:8001/textdedata",
+            json={
+                "text": sentence,
+                "sessionID": sesh4
+            },
+            timeout=5)
+
+testerNER()
+testerNER()
+
 

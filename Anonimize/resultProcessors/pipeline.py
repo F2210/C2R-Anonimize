@@ -55,7 +55,7 @@ def resultProcessor(text, results):
             notFound = True
             while notFound:
                 char = text[endslice]
-                if char == " " or char == "." or char == ",":
+                if char == " " or char in string.punctuation:
                     notFound = False
                 endslice += 1
 
