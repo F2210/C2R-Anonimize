@@ -38,8 +38,8 @@ def addentity(entity, sessionid, entitytype):
     with connection.cursor() as c:
         c.execute(
             'SELECT COUNT(id) FROM REST_entity '
-            'WHERE in_entity=%s ',
-            [entity]
+            'WHERE in_entity=%s AND session_id=%s',
+            [entity, str(sessionid).replace("-", "")]
         )
         result = c.fetchone()
         connection.close()
