@@ -102,6 +102,6 @@ def testerNER():
             timeout=5)
 
 testerNER()
-testerNER()
+# testerNER()
 
 

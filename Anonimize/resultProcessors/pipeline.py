@@ -73,9 +73,11 @@ def resultProcessor(text, results):
                     "length": len(entityset) + 1
                 })
 
-    for entity in processedresults:
-        print("finding: ", entity)
-        resultdict = findEntity(resultdict, text, entity)
+    resultdict = {}
+    if processedresults != []:
+        for entity in processedresults:
+            print("finding: ", entity)
+            resultdict = findEntity(resultdict, text, entity)
 
     print("processed results")
     return resultdict
