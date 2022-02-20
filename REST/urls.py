@@ -11,3 +11,6 @@ urlpatterns = [
     path('textredata', textdataReEndpoint),
     path('textredata/<str:textdataID>/', textdataReEndpoint),
 ]
+
+
+v

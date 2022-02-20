@@ -41,8 +41,14 @@ def sessionEndpoint(request, sessionID=None):
                     "replaced": textdata.replacement_text,
                     "entities": textdata.entities,
                 })
-                replacement_returntext += textdata.replacement_text + ". "
-                original_returntext += textdata.original_text + ". "
+                try:
+                    replacement_returntext += textdata.replacement_text + ". "
+                except TypeError:
+                    replacement_returntext += "ERROR"
+                try:
+                    original_returntext += textdata.original_text + ". "
+                except:
+                    original_returntext += "ERROR"
 
             returndata = {
                 "status_code": 200,
@@ -112,8 +118,8 @@ def sessionEndpoint(request, sessionID=None):
                         "replaced": textdata.replacement_text,
                         "entities": textdata.entities,
                     })
-                    replacement_returntext += textdata.replacement_text + ". "
-                    original_returntext += textdata.original_text + ". "
+                    replacement_returntext += textdata.replacement_text
+                    original_returntext += textdata.original_text
 
                 returndata = {
                     "status_code": 200,
