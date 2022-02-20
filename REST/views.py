@@ -42,11 +42,11 @@ def sessionEndpoint(request, sessionID=None):
                     "entities": textdata.entities,
                 })
                 try:
-                    replacement_returntext += textdata.replacement_text
+                    replacement_returntext += textdata.replacement_text.strip() + " "
                 except TypeError:
                     replacement_returntext += "ERROR"
                 try:
-                    original_returntext += textdata.original_text
+                    original_returntext += textdata.original_text.strip() + " "
                 except:
                     original_returntext += "ERROR"
 
