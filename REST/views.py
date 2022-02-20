@@ -43,11 +43,11 @@ def sessionEndpoint(request, sessionID=None):
                 })
                 try:
                     replacement_returntext += textdata.replacement_text.strip() + " "
-                except TypeError:
+                except TypeError or AttributeError:
                     replacement_returntext += "ERROR"
                 try:
                     original_returntext += textdata.original_text.strip() + " "
-                except:
+                except TypeError or AttributeError:
                     original_returntext += "ERROR"
 
             returndata = {
