@@ -103,10 +103,11 @@ def syllable_count(word):
         count += 1
     return count
 
+syllables = 0
 for conv in convo:
     for word in conv.split(" "):
         if word != "":
-            print(syllable_count(word))
+            syllables += syllable_count(word)
 
 def testerNER():
 
