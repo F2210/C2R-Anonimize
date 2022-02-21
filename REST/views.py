@@ -252,6 +252,8 @@ def textTokenizer(request):
 
         data = request.POST
 
+        print(data)
+
         tokenizer = AutoTokenizer.from_pretrained("wietsedv/bert-base-dutch-cased-finetuned-sonar-ner")
 
         print(tokenizer(data["sentence"]))
