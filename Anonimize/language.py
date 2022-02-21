@@ -1,4 +1,4 @@
-from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
+from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification, PreTrainedTokenizerFast
 from flair.data import Sentence
 from flair.models import SequenceTagger
 from .models import nermodels
@@ -65,6 +65,7 @@ class NER:
 
         elif self.modeltype == "transformer":
             tokenizer = AutoTokenizer.from_pretrained(self.model)
+
             model = AutoModelForTokenClassification.from_pretrained(self.model)
 
             ner = pipeline("ner", model=model, tokenizer=tokenizer)

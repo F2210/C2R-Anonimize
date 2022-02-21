@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from REST.models import *
 import json
+from transformers import AutoTokenizer
 from multiprocessing import Process
 from Anonimize.controller import de_identify
 # Create your views here.
@@ -243,6 +244,17 @@ def textdataDeEndpoint(request, textdataID=None):
         }
 
     return JsonResponse(returndata, status=returndata["status_code"])
+
+@csrf_exempt
+def textTokenizer(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+
+        tokenizer = AutoTokenizer.from_pretrained("wietsedv/bert-base-dutch-cased-finetuned-sonar-ner")
+
+        print(tokenizer(data["sentence"]))
 
 @csrf_exempt
 def textdataReEndpoint(request, textdataID=None):

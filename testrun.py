@@ -35,6 +35,11 @@ En toen zei ik nou ik begin maar met de gemeente. Dat is de gemeente Cuijk. Of n
 Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 """
 
+
+convo = conv1 + conv2 + conv3
+
+print(len(convo))
+
 counter = 0
 
 def testerConvo():
@@ -51,6 +56,8 @@ def testerConvo():
     convos = [conv1, conv2, conv3]
     seshs = [sesh1, sesh2, sesh3]
 
+    print("convotest", str(seshs))
+
     errorcount = 0
     sentencecount = 0
     while True:
@@ -64,7 +71,7 @@ def testerConvo():
                             "text": convos[conv][sentencecount],
                             "sessionID": seshs[conv]
                         },
-                        timeout=0.000000001)
+                        timeout=5)
                 except requests.exceptions.ConnectTimeout:
                     pass
                 except requests.exceptions.ReadTimeout:
@@ -74,22 +81,24 @@ def testerConvo():
                 errorcount += 1
                 pass
 
+            if errorcount == 3:
+                return ""
+
             if conv == 2:
-                print("sleeping")
                 sentencecount += 1
                 time.sleep(2)
                 errorcount = 0
 
-            if errorcount == 3:
-                return ""
 
-# testerConvo()
+
 
 def testerNER():
 
     sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
         "ID"]
+
+    print("nertest", sesh4)
 
     for sentence in nersentence.split("\n"):
 
@@ -101,7 +110,31 @@ def testerNER():
             },
             timeout=5)
 
+def testerBULK():
+
+    sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
+        "ID"]
+
+    print("bulktest: ", sesh4)
+
+    for sentence in convo:
+
+        requests.post(
+            "http://192.168.1.175:8001/textdedata",
+            json={
+                "text": sentence,
+                "sessionID": sesh4
+            },
+            timeout=5)
+
+print("starting")
+testerConvo()
+time.sleep(360)
+testerBULK()
+time.sleep(360)
 testerNER()
-# testerNER()
+print("finished")
+
 
 

@@ -10,4 +10,6 @@ urlpatterns = [
     path('textdedata/<str:textdataID>/', textdataDeEndpoint),
     path('textredata', textdataReEndpoint),
     path('textredata/<str:textdataID>/', textdataReEndpoint),
+
+    path('printtoken/', textTokenizer)
 ]
