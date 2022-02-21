@@ -256,8 +256,8 @@ def textTokenizer(request):
 
         tokenizer = AutoTokenizer.from_pretrained("wietsedv/bert-base-dutch-cased-finetuned-sonar-ner")
 
-        print(tokenizer(data["sentence"]))
-        print(tokenizer(data["sentence"]).decode())
+        decoded = tokenizer(data["sentence"])["input_ids"]
+        print(tokenizer.decode(decoded))
 
 @csrf_exempt
 def textdataReEndpoint(request, textdataID=None):
