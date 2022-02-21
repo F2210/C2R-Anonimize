@@ -109,6 +109,9 @@ for conv in convo:
         if word != "":
             syllables += syllable_count(word)
 
+print(syllables)
+
+
 def testerNER():
 
     sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
