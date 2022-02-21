@@ -162,6 +162,22 @@ def sessionEndpoint(request, sessionID=None):
 
     return JsonResponse(returndata, status=returndata["status_code"])
 
+def syllable_count(sentence):
+    count = 0
+    vowels = "aeiouy"
+    for word in sentence.split(" "):
+        if word != "":
+            if word[0] in vowels:
+                count += 1
+            for index in range(1, len(word)):
+                if word[index] in vowels and word[index - 1] not in vowels:
+                    count += 1
+                    if word.endswith("e"):
+                        count -= 1
+            if count == 0:
+                count += 1
+    return count
+
 @csrf_exempt
 def textdataDeEndpoint(request, textdataID=None):
     """
@@ -197,6 +213,7 @@ def textdataDeEndpoint(request, textdataID=None):
             textdbobj = TextData.objects.create(
                 original_text=data["text"],
                 session=sessiondbobj,
+                syllable=syllable_count(data["text"]),
                 type=False
             )
 

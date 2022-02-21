@@ -71,7 +71,7 @@ def testerConvo():
                             "text": convos[conv][sentencecount],
                             "sessionID": seshs[conv]
                         },
-                        timeout=5)
+                        timeout=0.000000000000000001)
                 except requests.exceptions.ConnectTimeout:
                     pass
                 except requests.exceptions.ReadTimeout:
@@ -132,6 +132,8 @@ def testerNER():
             },
             timeout=5)
 
+    time.sleep(5)
+
 def testerBULK():
 
     sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
@@ -149,7 +151,7 @@ def testerBULK():
                     "text": sentence,
                     "sessionID": sesh4
                 },
-                timeout=0.00000000000001)
+                timeout=5)
 
         except requests.exceptions.ReadTimeout:
             pass
@@ -159,15 +161,13 @@ def testerBULK():
         syllables = syllable_count(sentence)
 
         seccount = syllables / 8
+        print(seccount)
         time.sleep(seccount)
 
-# print("starting")
-# testerConvo()
+print("starting")
+testerConvo()
+# time.sleep(120)
+# testerBULK()
 # time.sleep(360)
-testerBULK()
-time.sleep(360)
-testerNER()
+# testerNER()
 print("finished")
-
-
-

@@ -21,6 +21,7 @@ class TextData(models.Model):
     status = models.IntegerField(default=0)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     entities = models.JSONField(null=True)
+    syllable = models.IntegerField(null=True)
     replacement_text = models.TextField(null=True)
     type = models.BooleanField(default=False) # False = to de-identify / True = to re-identify
     time_start = models.FloatField(null=True)
