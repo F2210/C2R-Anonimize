@@ -11,5 +11,4 @@ urlpatterns = [
     path('textredata', textdataReEndpoint),
     path('textredata/<str:textdataID>/', textdataReEndpoint),
 
-    path('printtoken/', textTokenizer)
 ]

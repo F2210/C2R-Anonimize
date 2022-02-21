@@ -246,20 +246,6 @@ def textdataDeEndpoint(request, textdataID=None):
     return JsonResponse(returndata, status=returndata["status_code"])
 
 @csrf_exempt
-def textTokenizer(request):
-
-    if request.method == "POST":
-
-        data = request.POST
-
-        print(data)
-
-        tokenizer = AutoTokenizer.from_pretrained("wietsedv/bert-base-dutch-cased-finetuned-sonar-ner")
-
-        decoded = tokenizer(data["sentence"])["input_ids"]
-        print(tokenizer.convert_ids_to_tokens(decoded))
-
-@csrf_exempt
 def textdataReEndpoint(request, textdataID=None):
     """
 
