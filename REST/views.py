@@ -250,7 +250,7 @@ def textTokenizer(request):
 
     if request.method == "POST":
 
-        data = json.loads(request.body)
+        data = request.POST
 
         tokenizer = AutoTokenizer.from_pretrained("wietsedv/bert-base-dutch-cased-finetuned-sonar-ner")
 
