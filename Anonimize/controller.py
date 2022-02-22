@@ -33,7 +33,7 @@ def updatevalue(table, column, id, value):
 
 def addentity(entity, sessionid, entitytype):
 
-    print("adding entity")
+    # print("adding entity")
     connection = new_db_connection()
     with connection.cursor() as c:
         c.execute(
@@ -123,22 +123,22 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
-        print("ts added")
+        # print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        print("set language id")
+        # print("set language id")
         self.languageProcessor()
         # print(self.language)
 
-        print("detect entities")
+        # print("detect entities")
         self.NERDetection()
         # print(self.entities)
 
-        print("classify entities")
+        # print("classify entities")
         self.EntityClassification()
         # print(self.entities)
 
-        print("apply de-identitfy")
+        # print("apply de-identitfy")
         self.NEApplier()
         # print(self.textdata["replacement_text"])
 
