@@ -140,8 +140,8 @@ def testerBULK():
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
         "ID"]
 
-    # print("bulktest: ", sesh4)
-    # print("start", datetime.datetime.now().timestamp())
+    print("bulktest: ", sesh4)
+    print("start", datetime.datetime.now().timestamp())
 
     count = 0
     for sentence in convo*5:
@@ -150,7 +150,7 @@ def testerBULK():
                 requests.post(
                     "http://192.168.1.175:8001/textdedata",
                     json={
-                        "text": sentence.lower(),
+                        "text": sentence.strip().lower(),
                         "sessionID": sesh4
                     },
                     timeout=5)
@@ -170,23 +170,23 @@ def testerBULK():
 # testerConvo()
 # time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 testerBULK()
-time.sleep(60)
+time.sleep(120)
 
 # print("end", datetime.datetime.now().timestamp())
 # time.sleep(360)
