@@ -2,9 +2,9 @@ import datetime
 import random, requests, time
 
 
-conv1 = "Hoi. Hoi Ik ben Jacco. Hoi aangenaam. Ik ben dr Vreeswijk. Wat kan ik voor je doen? Ik heb last van mijn scheenbeen. Ik heb 1 grote rode plek en ik weet niet echt wat het is. Oké, Laten we dan eens gaan kijken waar je last van hebt, meneer Broeren. Als je even naar de behandeltafel wandelt en daar gaat zitten, kijken ik even? Oké, Dit is inderdaad een rode plek. Doet het pijn als ik hier duw? Klein beetje het zeurt wat. En Als ik hier duw? Ja dat doet pijn. Oké ga er maar weer zitten. U heeft een onderhuids ontsteking. Mocht die groter worden, of als u last van koorts krijgt, dan moet u even bellen en dan moeten we even opnieuw kijken. Misschien moet u dan antibiotica? Maar vooralsnog nog ziet het er goed uit. Omcirkel de plek die rood is en doe dat dan over 24 uur nog een keer. Als het dan dus groter is geworden, dan mag u even contact opnemen. Oke bedankt. Tot ziens. Tot ziens.".split(".")
+conv1 = "Hoi Ik ben Jacco. Hoi aangenaam, Ik ben dr Vreeswijk, Wat kan ik voor je doen? Ik heb last van mijn scheenbeen. Ik heb 1 grote rode plek en ik weet niet echt wat het is. Oké, Laten we dan eens gaan kijken waar je last van hebt, meneer Broeren. Als je even naar de behandeltafel wandelt en daar gaat zitten, kijken ik even? Oké, Dit is inderdaad een rode plek. Doet het pijn als ik hier duw? Klein beetje het zeurt wat. En Als ik hier duw? Ja dat doet pijn. Oké ga er maar weer zitten. U heeft een onderhuids ontsteking. Mocht die groter worden, of als u last van koorts krijgt, dan moet u even bellen en dan moeten we even opnieuw kijken. Misschien moet u dan antibiotica? Maar vooralsnog nog ziet het er goed uit. Omcirkel de plek die rood is en doe dat dan over 24 uur nog een keer. Als het dan dus groter is geworden, dan mag u even contact opnemen.".split(".")
 
-conv2 = "Goedemorgen. Goedemorgen. Ik ben Jan, hoi. Hoi, Ik ben dokter De boer. Wat kan ik voor u doen? Ik heb last van mijn oor. Oké, dan gaan we even kijken. gaat u maar op de behandeltafel zitten, dan pak ik even mijn oor kijkapparaat erbij. Nou oké, Het is rood van binnen. Heeft u koorts? Nee, Ik heb geen koorts alleen oorpijn. En is er vocht uit de oor komen lopen Meneer De Vries? Nee, dat heb ik nog niet gemerkt. Vorige keer was het wel zo. Nou en wanneer was de vorige keer? Hmmm. Ongeveer een week geleden? Oh, Dat is heel snel op deze keer. Hoeveel pijn deed hij toen? Nou, Ik heb toen een paracetamolletje genomen om in slaap te vallen. Oké. En heeft u nu iets geslikt? Nee maar ik zat daar wel over na te denken. O. Nou, u heeft gewoon een ontsteking op het moment, maar Omdat u het een week hiervoor ook al had, lijkt het niet zo goed weg te gaan. Dus ga ik u op een antibiotica kuur zetten. Oké, ik maak even een verwijsbriefje voor u. Uw naam was. Jan De Vries. Oké, krijgt u een verwijsbrief mee namens dr. Piet de boer. Oké, dank u wel, dan ga ik nu even langs de apotheek. Tot ziens tot de volgende keer. doeg.".split(".")
+conv2 = "Goedemorgen. Goedemorgen. Ik ben Jan, hoi. Hoi, Ik ben dokter De boer. Wat kan ik voor u doen? Ik heb last van mijn oor. Oké, dan gaan we even kijken. gaat u maar op de behandeltafel zitten, dan pak ik even mijn oor kijkapparaat erbij. Nou oké, Het is rood van binnen. Heeft u koorts? Nee, Ik heb geen koorts alleen oorpijn. En is er vocht uit de oor komen lopen Meneer De Vries? Nee, dat heb ik nog niet gemerkt. Vorige keer was het wel zo. Nou en wanneer was de vorige keer? Hmmm. Ongeveer een week geleden? Oh, Dat is heel snel op deze keer. Hoeveel pijn deed hij toen? Nou, Ik heb toen een paracetamolletje genomen om in slaap te vallen. Oké. En heeft u nu iets geslikt? Nee maar ik zat daar wel over na te denken. O. Nou, u heeft gewoon een ontsteking op het moment, maar Omdat u het een week hiervoor ook al had, lijkt het niet zo goed weg te gaan. Dus ga ik u op een antibiotica kuur zetten. Oké, ik maak even een verwijsbriefje voor u. Uw naam was. Jan De Vries. Oké, krijgt u een verwijsbrief mee namens dr. Piet de boer. Oké, dank u wel, dan ga ik nu even langs de apotheek.".split(".")
 
 conv3 = "Sevilla Het was echt fucking chill. Het was mooi weer, heel veel koffie drinken, was echt chill. En ja dus ook heel veel getraind, want we waren op trainingskamp. 17 keer in 10 dagen hebben we volgens mij getraind. Heel veel, was ook wel goed te doen aan het eind. Nog veel tapas gegeten? Ja, We hebben heel veel tapas gegeten. Maar met dat vele trainingen kreeg je geen last van je rug Jacco? Op de 4/5 dag wel last van mijn rug, maar max, dat trok ook wel weer weg. Toen hebben we volgens mij 20 km training iets korter moeten varen, maar ja, Dat was op zich ook niet zo'n probleem, want we trainden sowieso al super veel. En, Het was echt super chill. Dat Malte op een motorboot zat, hij coachte echt. Dat was heel Nice. En, je hebt daar dus coach boten die varen dan achter je boot aan. En, daar staat dan je coach op. Dus die kan dan eigenlijk heel erg goed om je heen varen om te kijken wat je fout doet. Dat helpt enorm met coaching en ze kunnen ook heel Nice filmen, dus je hebt gewoon de hele tijd filmpjes van de zij voor en achterkant waar je heel goed kan zien wat je zelf ook fout doet. En Dat is een stuk makkelijker om dingen te verbeteren die je coach dan benoemd. Omdat je het in één keer zelf ziet. Hoe verbleven jullie daar? We zaten in het huisje daar met 9 of 8. Volgens mij. Er was nog wat gezeik, omdat er twee perse met elkaar in een kamer wilden, zodat ze niet met andere Mensen In de Kamer hoefden. Maar uiteindelijk was het wel opgelost en was nog heel gezellig. Was wel een kleine keuken, dus koken was vrij ingewikkeld. En de ruimte was sowieso zelf niet heel erg groot, dus ja, Het was wat krap soms. Maar op zich was dat ook allemaal geen ramp. En, Het was wel heel gezellig en We hadden ook allemaal fietsen. We hadden allemaal fietsen die we konden gebruiken om van het huisje naar de baan te gaan, want Dat is toch wel een goed halfuur lopen Als je het te voet moest doen. En die fietsen, die kocht je dan eigenlijk over van een lokale fietsenmaker daar voor € 100 ofzo. En dan bracht je die aan het eind van de dag terug aan het eind van de week. En dan betalen ze je gewoon € 70, terug, of de helft in ieder geval. En dat. Nou ja, dat bedrag krijg je dan gewoon terug en dan betaal je dus effectief veel minder dan wanneer je een fiets huurt voor de hele week. Alleen op de eerste twee dagen hadden we nog geen fiets. In sevilla hebben ze dus allemaal stepjes. Een step die je kan gebruiken? En dan betaal je na gebruik? Alleen € 1 per minuut ofzo. Dus Dat is best wel veel, maar Als je niet heel lang onderweg bent. Oh nee, 20 cent per minuut. We hadden trouwens al onze spullen in de boot gestopt. Daardoor had je niet dat je ook nog een ruimbagage tas mee moest nemen, omdat je gewoon je kleding In de boot stopt. En, die kan je dan daarna daar ook weer er uit halen. Dus Dat is. Ja, je hoeft niet kleren niet allemaal In het vliegtuig mee te nemen. Wat ook chill is. Dus Dat was de trip naar Sevilla.".split(".")
 
@@ -166,26 +166,59 @@ def testerBULK():
             count += 1
             time.sleep(seccount)
 
+
+def testerSingleSentence():
+
+    sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                          json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
+        "ID"]
+
+    print(sesh4)
+    print(datetime.datetime.now().timestamp())
+
+    count = 0
+    for sentence in convo*2:
+
+            try:
+                requests.post(
+                    "http://192.168.1.175:8001/textdedata",
+                    json={
+                        "text": "Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.",
+                        "sessionID": sesh4
+                    },
+                    timeout=0.000000001)
+
+            except requests.exceptions.ReadTimeout:
+                pass
+            except requests.exceptions.ConnectTimeout:
+                pass
+
+            syllables = syllable_count("Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.")
+
+            seccount = syllables / 8
+            count += 1
+            time.sleep(seccount)
+
 # print("starting")
 # testerConvo()
 # time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
-testerBULK()
+testerSingleSentence()
 time.sleep(120)
 
 # print("end", datetime.datetime.now().timestamp())
