@@ -36,7 +36,7 @@ def main():
         c.execute(
             'SELECT * FROM REST_textdata WHERE status=0 LIMIT 50',
         )
-
+        connection.commit()
         results = [dict(zip([column[0] for column in c.description], i)) for i in c.fetchall()]
 
     print(results)
