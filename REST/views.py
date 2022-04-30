@@ -1,11 +1,11 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from REST.models import *
 import json
 
-from Anonimize.controller import de_identify
+# from Anonimize.controller import de_identify
 
 @csrf_exempt
 def sessionEndpoint(request, sessionID=None):
