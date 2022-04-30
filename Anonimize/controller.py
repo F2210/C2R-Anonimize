@@ -8,7 +8,6 @@ from .language import NER, nerPerformer
 from .models import nermodels
 import json
 import langid
-from multiprocessing import Process
 
 models = NER().nermodels
 
