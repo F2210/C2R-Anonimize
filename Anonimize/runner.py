@@ -18,6 +18,8 @@ def main():
 
         results = [dict(zip([column[0] for column in c.description], i)) for i in c.fetchall()]
 
+    print(results)
+
     for result in results:
 
         with connection.cursor() as c:
@@ -45,7 +47,7 @@ def main():
             "language": session["language"]
         }
 
-        # print("starting processing")
+        print("starting processing")
         process = de_identify(textdata, session)
         process.daemon = True
         process.start()
