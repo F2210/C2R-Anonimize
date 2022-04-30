@@ -34,7 +34,7 @@ def main():
 
     with connection.cursor() as c:
         c.execute(
-            'SELECT * FROM REST_textdata WHERE status=0',
+            'SELECT * FROM REST_textdata WHERE status=0 LIMIT 50',
         )
 
         results = [dict(zip([column[0] for column in c.description], i)) for i in c.fetchall()]
