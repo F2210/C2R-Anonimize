@@ -232,33 +232,32 @@ def testerSingleSentence():
     print(datetime.datetime.now().timestamp())
 
     count = 0
-    for sentence in convo*2:
 
-            try:
-                requests.post(
-                    "http://192.168.1.175:8001/textdedata",
-                    json={
-                        "text": "Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.",
-                        "sessionID": sesh4
-                    },
-                    timeout=0.000000001)
+    try:
+        requests.post(
+            "http://192.168.1.175:8001/textdedata",
+            json={
+                "text": "Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.",
+                "sessionID": sesh4
+            },
+            timeout=0.000000001)
 
-            except requests.exceptions.ReadTimeout:
-                pass
-            except requests.exceptions.ConnectTimeout:
-                pass
+    except requests.exceptions.ReadTimeout:
+        pass
+    except requests.exceptions.ConnectTimeout:
+        pass
 
-            syllables = syllable_count("Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.")
+    syllables = syllable_count("Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.")
 
-            seccount = syllables / 8
-            count += 1
-            time.sleep(seccount)
+    seccount = syllables / 8
+    count += 1
+    time.sleep(seccount)
 
 print("starting")
 # testerConvo()
-testerBULK()
-time.sleep(120)
-# testerSingleSentence()
+# testerBULK()
+# time.sleep(120)
+testerSingleSentence()
 # time.sleep(120)
 # testerSingleSentence()
 # time.sleep(120)
