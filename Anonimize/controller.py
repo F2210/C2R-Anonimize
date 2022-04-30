@@ -1,3 +1,9 @@
+import sys, os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.append(os.path.join(BASE_DIR, "Anonimize"))
+
 import asyncio
 import datetime
 import random
