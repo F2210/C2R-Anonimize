@@ -29,33 +29,43 @@ def main():
 
         with connection.cursor() as c:
             c.execute(
-                'UPDATE REST_textdata SET status=1 WHERE status=0',
+                'UPDATE REST_textdata SET status=1 WHERE id=%s',
+                [result["session_id"]]
             )
             connection.commit()
 
-        with connection.cursor() as c:
-            c.execute(
-                'SELECT * FROM REST_session WHERE id=%s',
-                [result["session_id"]]
-            )
+        try:
+            with connection.cursor() as c:
+                c.execute(
+                    'SELECT * FROM REST_session WHERE id=%s',
+                    [result["session_id"]]
+                )
 
-            session = dict(zip([column[0] for column in c.description], c.fetchone()))
+                session = dict(zip([column[0] for column in c.description], c.fetchone()))
 
-        textdata = {
-            "id": result["id"],
-            "original_text": result["original_text"],
-            "sessionid": result["session_id"],
-        }
+            textdata = {
+                "id": result["id"],
+                "original_text": result["original_text"],
+                "sessionid": result["session_id"],
+            }
 
-        session = {
-            "id": result["session_id"],
-            "language": session["language"]
-        }
+            session = {
+                "id": result["session_id"],
+                "language": session["language"]
+            }
 
-        print("starting processing")
-        process = de_identify(textdata, session)
-        process.daemon = True
-        process.start()
+            print("starting processing")
+            process = de_identify(textdata, session)
+            process.daemon = True
+            process.start()
+
+        except:
+            with connection.cursor() as c:
+                c.execute(
+                    'UPDATE REST_textdata SET status=0 WHERE id=%s',
+                    [result["session_id"]]
+                )
+                connection.commit()
 
     connection.close()
 
