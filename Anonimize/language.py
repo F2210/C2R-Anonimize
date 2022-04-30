@@ -16,18 +16,23 @@ def nerPerformer(processdata, text):
     """
     (x, y, z) = processdata
 
+    print(processdata)
+
     result = None
 
     if z == "flair":
         tagger = x
         Sentence = y
 
+        print("sentence")
         sentence = Sentence(text)
 
+        print("tagger")
         tagger.predict(sentence)
 
         rawresult = sentence
 
+        print("resultprocessor")
         result = flairType.resultProcessor(text, rawresult)
 
     if z == "transformer":
@@ -37,6 +42,8 @@ def nerPerformer(processdata, text):
 
     if result is None:
         Exception("The model was not set correctly. The type has to be either Flair or Transformer.")
+
+    print("returning")
 
     return result
 
