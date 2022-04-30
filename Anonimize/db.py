@@ -21,6 +21,4 @@ def new_db_connection():
 
     finally:
         if connection is not None and connection.is_connected():
-            connection.close()
-
-    return connection
+            return connection
