@@ -126,7 +126,7 @@ class de_identify(Process):
 
         print("detect entities")
         self.NERDetection()
-        # print(self.entities)
+        print(self.entities)
 
         print("classify entities")
         self.EntityClassification()
