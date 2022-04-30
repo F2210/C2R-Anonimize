@@ -157,8 +157,12 @@ class de_identify(Process):
 
     def NERDetection(self):
 
+        print("go ner")
+
         # Perform NER detection on sentence
         result_entities = nerPerformer(models[self.language], self.textdata["original_text"])
+
+        print("past ner")
 
         # Store entities in database
         updatevalue("textdata", "entities", self.textdata["id"], json.dumps(result_entities))
