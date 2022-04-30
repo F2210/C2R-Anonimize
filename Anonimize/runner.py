@@ -47,3 +47,4 @@ def main():
 
     connection.close()
 
+main()
