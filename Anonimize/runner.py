@@ -1,5 +1,5 @@
-from .db import new_db_connection
-from .controller import de_identify
+from db import new_db_connection
+from controller import de_identify
 
 def main():
 
