@@ -226,9 +226,9 @@ def textdataDeEndpoint(request, textdataID=None):
                 "language": sessiondbobj.language
             }
 
-            process = de_identify(textdata, session)
-            process.daemon = True
-            process.start()
+            # process = de_identify(textdata, session)
+            # process.daemon = True
+            # process.start()
 
             returndata = {
                 "status_code": 200,
