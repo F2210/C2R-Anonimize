@@ -7,7 +7,6 @@ import uuid
 from Anonimize.db import new_db_connection
 import torch
 
-from REST.models import *
 from .language import NER, nerPerformer, debug
 from .models import nermodels
 import requests
@@ -230,24 +229,24 @@ class de_identify(Process):
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
         updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)
-
-class re_identify(Process):
-
-    def __init__(self, sentence, session):
-        # self.models = models
-        self.textdata = TextData.objects.get(id=sentence.id)
-        self.retextdata: str = ""
-        self.session: Session = Session.objects.get(id=session.id)
-        self.entities: set = {i for i in Entity.objects.filter(session=self.session)}
-        super(re_identify, self).__init__()
-
-    def run(self):
-
-        textdata = self.textdata.original_text
-
-        for entity in self.entities:
-            if entity.out_entity in textdata:
-                textdata = textdata.replace(entity.out_entity, entity.in_entity)
-
-        self.textdata.replacement_text = textdata
-        self.textdata.save()
+#
+# class re_identify(Process):
+#
+#     def __init__(self, sentence, session):
+#         # self.models = models
+#         self.textdata = TextData.objects.get(id=sentence.id)
+#         self.retextdata: str = ""
+#         self.session: Session = Session.objects.get(id=session.id)
+#         self.entities: set = {i for i in Entity.objects.filter(session=self.session)}
+#         super(re_identify, self).__init__()
+#
+#     def run(self):
+#
+#         textdata = self.textdata.original_text
+#
+#         for entity in self.entities:
+#             if entity.out_entity in textdata:
+#                 textdata = textdata.replace(entity.out_entity, entity.in_entity)
+#
+#         self.textdata.replacement_text = textdata
+#         self.textdata.save()
