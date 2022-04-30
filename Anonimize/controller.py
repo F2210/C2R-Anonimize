@@ -36,8 +36,8 @@ def addentity(entity, sessionid, entitytype):
             [entity, str(sessionid).replace("-", "")]
         )
         result = c.fetchone()
-        connection.commit()
-        connection.close()
+    connection.commit()
+    connection.close()
 
     (count, ) = result
 
@@ -50,8 +50,8 @@ def addentity(entity, sessionid, entitytype):
                 [entity]
             )
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
-            connection.commit()
-            connection.close()
+        connection.commit()
+        connection.close()
         return result
 
     else:
@@ -67,8 +67,8 @@ def addentity(entity, sessionid, entitytype):
             )
 
             # print("-----------------------")
-            connection.commit()
-            connection.close()
+        connection.commit()
+        connection.close()
 
         return result
 
@@ -118,7 +118,7 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
-        print("ts added")
+        # print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         # print("set language id")
@@ -133,9 +133,9 @@ class de_identify(Process):
         self.EntityClassification()
         # print(self.entities)
 
-        # print("apply de-identitfy")
+        print("apply de-identitfy")
         self.NEApplier()
-        # print(self.textdata["replacement_text"])
+        print(self.textdata["replacement_text"])
 
         updatevalue("textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
