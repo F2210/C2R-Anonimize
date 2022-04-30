@@ -83,7 +83,7 @@ def main():
             with connection.cursor() as c:
                 c.execute(
                     'UPDATE REST_textdata SET status=0 WHERE id=%s',
-                    [result["session_id"]]
+                    [result["id"]]
                 )
                 connection.commit()
 
