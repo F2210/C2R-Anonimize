@@ -11,3 +11,5 @@ def new_db_connection():
     )
 
     return connection
+
+new_db_connection()
