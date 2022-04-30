@@ -78,7 +78,8 @@ def main():
             process.daemon = True
             process.start()
 
-        except:
+        except Exception as e:
+            print(e)
             with connection.cursor() as c:
                 c.execute(
                     'UPDATE REST_textdata SET status=0 WHERE id=%s',
