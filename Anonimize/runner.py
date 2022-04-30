@@ -87,8 +87,6 @@ def main():
                 )
                 connection.commit()
 
-    connection.close()
-
 while True:
     main()
     print("checking")
