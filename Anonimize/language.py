@@ -24,15 +24,12 @@ def nerPerformer(processdata, text):
         tagger = x
         Sentence = y
 
-        print("sentence")
         sentence = Sentence(text)
 
-        print("tagger")
         tagger.predict(sentence)
 
         rawresult = sentence
 
-        print("resultprocessor")
         result = flairType.resultProcessor(text, rawresult)
 
     if z == "transformer":

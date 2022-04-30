@@ -26,10 +26,10 @@ def resultProcessor(text, results):
 
     entityset = []
 
-    # print("processing results")
+    print("processing results")
     processedresults = []
 
-    # print(results)
+    print(results)
 
     for entity in results[::-1]:
 
@@ -59,7 +59,7 @@ def resultProcessor(text, results):
                     notFound = False
                 endslice += 1
 
-            # print("yeeehaw")
+            print("yeeehaw")
 
             endslice -= 1
             entityset = []
