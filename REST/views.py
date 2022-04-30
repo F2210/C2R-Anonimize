@@ -5,6 +5,7 @@ from django.db.models import Q
 from REST.models import *
 import json
 
+from Anonimize.controller import de_identify
 
 @csrf_exempt
 def sessionEndpoint(request, sessionID=None):
@@ -224,6 +225,10 @@ def textdataDeEndpoint(request, textdataID=None):
                 "id": sessiondbobj.pk,
                 "language": sessiondbobj.language
             }
+
+            process = de_identify(textdata, session)
+            process.daemon = True
+            process.start()
 
             returndata = {
                 "status_code": 200,
