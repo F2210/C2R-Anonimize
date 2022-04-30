@@ -9,8 +9,7 @@ def new_db_connection():
             user='jbroeren',
             password='Hello123!!*',
             host='localhost',
-            port=3306,
-            database='restdb'
+            # database='restdb'
         )
 
         if connection.is_connected():
