@@ -77,6 +77,7 @@ def main():
             process = de_identify(textdata, session)
             process.daemon = True
             process.start()
+            process.run()
 
         except Exception as e:
             print(e)
