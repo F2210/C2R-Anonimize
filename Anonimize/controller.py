@@ -117,7 +117,7 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
-        # print("ts added")
+        print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         print("set language id")
