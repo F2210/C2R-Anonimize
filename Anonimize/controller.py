@@ -8,6 +8,7 @@ from .language import NER, nerPerformer
 from .models import nermodels
 import json
 import langid
+from multiprocessing import Process
 
 models = NER().nermodels
 
@@ -88,7 +89,7 @@ def getentities(sessionid):
 
     return entities
 
-class de_identify():
+class de_identify(Process):
 
     def __init__(self, textdata, session):
         
@@ -101,8 +102,6 @@ class de_identify():
         self.modeltype: str = ""
         self.snomed_edition: str = ""
         self.snomed_version: str = ""
-
-        self.run()
         super(de_identify, self).__init__()
 
     def run(self):
@@ -115,7 +114,7 @@ class de_identify():
         step 4: anonimze the text with placeholders.
         """
 
-        # print("ts added")
+        print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         # print("set language id")

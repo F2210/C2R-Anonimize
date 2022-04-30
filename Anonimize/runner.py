@@ -2,7 +2,6 @@ import sys, os
 from pathlib import Path
 
 from time import sleep
-from multiprocessing import Process
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(str(BASE_DIR))
@@ -62,7 +61,6 @@ def main():
 
             # if syllable_count(result["original_text"]) < 12:
 
-
             textdata = {
                 "id": result["id"],
                 "original_text": result["original_text"],
@@ -75,7 +73,9 @@ def main():
             }
 
             print("starting processing")
-            Process(de_identify, args=(textdata, session)).start()
+            process = de_identify(textdata, session)
+            process.daemon = True
+            process.start()
 
         except Exception as e:
             print(e)
