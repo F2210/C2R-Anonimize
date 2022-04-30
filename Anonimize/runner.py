@@ -91,4 +91,5 @@ def main():
 
 while True:
     main()
+    print("checking")
     sleep(0.5)
