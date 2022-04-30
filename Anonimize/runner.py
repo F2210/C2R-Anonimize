@@ -51,5 +51,3 @@ def main():
         process.start()
 
     connection.close()
-
-main()

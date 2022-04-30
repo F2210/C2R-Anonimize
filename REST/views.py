@@ -4,10 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from REST.models import *
 import json
-from transformers import AutoTokenizer
-from multiprocessing import Process
-from Anonimize.controller import de_identify
-# Create your views here.
+
 
 @csrf_exempt
 def sessionEndpoint(request, sessionID=None):
