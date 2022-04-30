@@ -35,6 +35,7 @@ def nerPerformer(processdata, text):
     if z == "transformer":
         ner = x
 
+        print("startprocessing")
         result = pipelineType.resultProcessor(text, ner(text))
 
     if result is None:
