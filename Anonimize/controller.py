@@ -213,7 +213,7 @@ class de_identify(Process):
         for entity in self.entities:
             names = ["Mark", "Tom", "Erik", "Peter"]
 
-            int = random.randint(0, 4)
+            int = random.randint(0, 3)
             if entity["out_entity"] is None:
                 updatevalue("entity", "out_entity", entity["id"], names[int])
 
