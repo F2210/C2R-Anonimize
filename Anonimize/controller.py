@@ -1,16 +1,10 @@
-import sys, os
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent
-sys.path.append(os.path.join(BASE_DIR, "Anonimize"))
-
 import asyncio
 import datetime
 import random
 import time
 import uuid
 
-from .db import new_db_connection
+from Anonimize.db import new_db_connection
 import torch
 
 from REST.models import *

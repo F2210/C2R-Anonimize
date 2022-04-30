@@ -1,5 +1,11 @@
-from db import new_db_connection
-from controller import de_identify
+import sys, os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.append(os.path.join(BASE_DIR, "Anonimize"))
+
+from Anonimize.db import new_db_connection
+from Anonimize.controller import de_identify
 
 def main():
 
