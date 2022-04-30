@@ -22,8 +22,8 @@ def updatevalue(table, column, id, value):
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
             [value, str(id).replace("-", "")]
         )
-        connection.commit()
-        connection.close()
+    connection.commit()
+    connection.close()
 
 def addentity(entity, sessionid, entitytype):
 
@@ -69,7 +69,6 @@ def addentity(entity, sessionid, entitytype):
             # print("-----------------------")
         connection.commit()
         connection.close()
-
         return result
 
 def getentities(sessionid):
@@ -121,15 +120,15 @@ class de_identify(Process):
         # print("ts added")
         updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        # print("set language id")
+        print("set language id")
         self.languageProcessor()
         # print(self.language)
 
-        # print("detect entities")
+        print("detect entities")
         self.NERDetection()
         # print(self.entities)
 
-        # print("classify entities")
+        print("classify entities")
         self.EntityClassification()
         # print(self.entities)
 
@@ -215,7 +214,7 @@ class de_identify(Process):
         for entity in self.entities:
             names = ["Mark", "Tom", "Erik", "Peter"]
 
-            int = random.randint(0, 3)
+            int = random.randint(0, 4)
             if entity["out_entity"] is None:
                 updatevalue("entity", "out_entity", entity["id"], names[int])
 
