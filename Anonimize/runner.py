@@ -1,6 +1,8 @@
 import sys, os
 from pathlib import Path
 
+from time import sleep
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(str(BASE_DIR))
 
@@ -54,4 +56,6 @@ def main():
 
     connection.close()
 
-main()
+while True:
+    main()
+    sleep(0.5)
