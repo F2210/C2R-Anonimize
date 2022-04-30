@@ -113,8 +113,6 @@ class de_identify(Process):
 
     def run(self):
 
-        # do stuff
-
         """
         :returns None
         step 1: perform language recognition on the sentence and try to get the language from the database.
@@ -159,7 +157,7 @@ class de_identify(Process):
         (self.model, self.modeltype, self.snomededition) = models[self.language]
 
         updatevalue("session", "language", self.session["id"], language_code)
-        updatevalue("textdata", "status", self.textdata["id"], 1)
+        updatevalue("textdata", "status", self.textdata["id"], 2)
 
     def NERDetection(self):
 
@@ -177,7 +175,7 @@ class de_identify(Process):
         self.entities = getentities(self.session["id"])
 
         # Set status for sentence
-        updatevalue("textdata", "status", self.textdata["id"], 2)
+        updatevalue("textdata", "status", self.textdata["id"], 3)
 
     def EntityClassification(self):
 

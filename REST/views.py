@@ -228,11 +228,6 @@ def textdataDeEndpoint(request, textdataID=None):
                 "language": sessiondbobj.language
             }
 
-            # print("starting processing")
-            process = de_identify(textdata, session)
-            process.daemon = True
-            process.start()
-
             returndata = {
                 "status_code": 200,
                 "response": "success",
@@ -299,10 +294,6 @@ def textdataReEndpoint(request, textdataID=None):
                 session=session,
                 type=True
             )
-
-            process = de_identify(textdata, session)
-            process.daemon = True
-            process.start()
 
             returndata = {
                 "status_code": 200,
