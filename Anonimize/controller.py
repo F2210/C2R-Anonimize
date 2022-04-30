@@ -89,7 +89,7 @@ def getentities(sessionid):
 
     return entities
 
-class de_identify(Process):
+class de_identify():
 
     def __init__(self, textdata, session):
         
@@ -102,6 +102,8 @@ class de_identify(Process):
         self.modeltype: str = ""
         self.snomed_edition: str = ""
         self.snomed_version: str = ""
+
+        self.run()
         super(de_identify, self).__init__()
 
     def run(self):

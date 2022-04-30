@@ -74,10 +74,7 @@ def main():
             }
 
             print("starting processing")
-            process = de_identify(textdata, session)
-            process.daemon = True
-            process.start()
-            process.run()
+            Process(de_identify, args=(textdata, session)).start()
 
         except Exception as e:
             print(e)
