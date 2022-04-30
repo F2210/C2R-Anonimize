@@ -33,10 +33,12 @@ def nerPerformer(processdata, text):
         result = flairType.resultProcessor(text, rawresult)
 
     if z == "transformer":
-        ner = x
 
-        print("startprocessing")
-        result = pipelineType.resultProcessor(text, ner(text))
+        modeloutput = x(text)
+
+        print(modeloutput)
+
+        result = pipelineType.resultProcessor(text, modeloutput)
 
     if result is None:
         Exception("The model was not set correctly. The type has to be either Flair or Transformer.")
