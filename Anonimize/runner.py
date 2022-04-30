@@ -9,9 +9,12 @@ sys.path.append(str(BASE_DIR))
 from Anonimize.db import new_db_connection
 from Anonimize.controller import de_identify
 
+connection = new_db_connection()
+
 def main():
 
-    connection = new_db_connection()
+    if not connection.is_connected():
+        exit()
 
     with connection.cursor() as c:
         c.execute(

@@ -12,9 +12,6 @@ def new_db_connection():
             database='restdb'
         )
 
-        if connection.is_connected():
-            print('Connected to MySQL database')
-
     except Error as e:
         print(e)
 
