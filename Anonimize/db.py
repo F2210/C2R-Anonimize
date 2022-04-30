@@ -19,7 +19,7 @@ try:
         backend = load_backend(db['ENGINE'])
         return backend.DatabaseWrapper(db, alias)
 
-except ImportError:
+except:
 
     import mysql.connector
 
