@@ -5,7 +5,7 @@ def new_db_connection():
     connection = mysql.connector.connect(
         user='root',
         password='',
-        host='localhost',
+        host='127.0.0.1',
         database='restdb'
     )
 

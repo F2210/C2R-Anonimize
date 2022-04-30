@@ -34,7 +34,6 @@ def main():
 
             session = dict(zip([column[0] for column in c.description], c.fetchone()))
 
-
         textdata = {
             "id": result["id"],
             "original_text": result["original_text"],

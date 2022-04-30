@@ -1,21 +1,15 @@
-import asyncio
 import datetime
 import random
-import time
 import uuid
 
 from Anonimize.db import new_db_connection
-import torch
 
-from .language import NER, nerPerformer, debug
+from .language import NER, nerPerformer
 from .models import nermodels
-import requests
 import json
 import langid
 from multiprocessing import Process
-from abydos.distance import LIG3
 
-# load models into memory
 models = NER().nermodels
 
 def updatevalue(table, column, id, value):
