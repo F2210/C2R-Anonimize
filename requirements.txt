@@ -7,4 +7,5 @@ django
 fuzzywuzzy
 abydos
 mysqlclient
+mysql-connector-python
 git+https://github.com/huggingface/transformers.git
