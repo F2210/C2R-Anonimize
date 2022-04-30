@@ -22,6 +22,7 @@ def updatevalue(table, column, id, value):
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
             [value, str(id).replace("-", "")]
         )
+        connection.commit()
         connection.close()
 
 def addentity(entity, sessionid, entitytype):
@@ -35,6 +36,7 @@ def addentity(entity, sessionid, entitytype):
             [entity, str(sessionid).replace("-", "")]
         )
         result = c.fetchone()
+        connection.commit()
         connection.close()
 
     (count, ) = result
@@ -48,6 +50,7 @@ def addentity(entity, sessionid, entitytype):
                 [entity]
             )
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
+            connection.commit()
             connection.close()
         return result
 
@@ -64,7 +67,7 @@ def addentity(entity, sessionid, entitytype):
             )
 
             # print("-----------------------")
-
+            connection.commit()
             connection.close()
 
         return result
@@ -78,6 +81,7 @@ def getentities(sessionid):
             [str(sessionid).replace("-", "")]
         )
         result = c.fetchall()
+        connection.commit()
         connection.close()
 
     entities = []
