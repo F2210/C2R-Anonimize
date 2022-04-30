@@ -2,7 +2,7 @@ import sys, os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.append(BASE_DIR)
+sys.path.append(str(BASE_DIR))
 
 from Anonimize.db import new_db_connection
 from Anonimize.controller import de_identify
