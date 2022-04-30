@@ -80,15 +80,14 @@ def getentities(sessionid):
             [str(sessionid).replace("-", "")]
         )
         result = c.fetchall()
+
+        entities = []
+
+        for entity in result:
+            entities.append(dict(zip([column[0] for column in c.description], entity)))
+
         connection.commit()
         connection.close()
-
-    entities = []
-
-    for entity in result:
-        entities.append(dict(zip([column[0] for column in c.description], entity)))
-
-    # print(entities)
 
     return entities
 
