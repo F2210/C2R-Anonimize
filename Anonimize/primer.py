@@ -4,12 +4,12 @@ from time import sleep
 
 def main():
 
-    primersesh = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+    primersesh = requests.post("http://localhost:8001/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"]["ID"]
 
     try:
         requests.post(
-            "http://192.168.1.175:8001/textdedata",
+            "http://localhost:8001/textdedata",
             json={
                 "text": "Dit primer tekst.",
                 "sessionID": primersesh
@@ -19,6 +19,8 @@ def main():
     except requests.exceptions.ReadTimeout:
         pass
     except requests.exceptions.ConnectTimeout:
+        pass
+    except requests.exceptions.ConnectionError:
         pass
 
 while True:
