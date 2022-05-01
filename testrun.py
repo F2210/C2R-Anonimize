@@ -255,9 +255,9 @@ def testerSingleSentence():
 
 print("starting")
 # testerConvo()
-# testerBULK()
+testerBULK()
 # time.sleep(120)
-testerSingleSentence()
+# testerSingleSentence()
 # time.sleep(120)
 # testerSingleSentence()
 # time.sleep(120)
