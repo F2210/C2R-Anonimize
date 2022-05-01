@@ -2,10 +2,11 @@ import datetime, requests
 from time import sleep
 
 
-def main():
+primersesh = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                      json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"]["ID"]
 
-    primersesh = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
-                          json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"]["ID"]
+
+def main():
 
     try:
         requests.post(
