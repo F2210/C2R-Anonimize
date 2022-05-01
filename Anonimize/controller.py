@@ -108,7 +108,7 @@ class de_identify(Process):
         self.modeltype: str = ""
         self.snomed_edition: str = ""
         self.snomed_version: str = ""
-        super().__init__(self)
+        super().__init__()
 
     def run(self):
 
