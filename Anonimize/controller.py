@@ -94,7 +94,7 @@ class de_identify(Process):
             with connection.cursor() as c:
                 c.execute(
                     "DELETE FROM restdb.REST_textdata WHERE id=%s",
-                    [textdata["id"]]
+                    [str(textdata["id"]).replace("-", "")]
                 )
             connection.commit()
             connection.close()
