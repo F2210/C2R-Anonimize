@@ -27,4 +27,4 @@ def main():
 while True:
     main()
     print("priming")
-    sleep(10)
+    sleep(5)
