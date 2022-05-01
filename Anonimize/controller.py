@@ -132,6 +132,8 @@ class de_identify(Process):
 
         updatevalue("textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
+        exit()
+
     def languageProcessor(self):
 
         # Check if the language was already known
