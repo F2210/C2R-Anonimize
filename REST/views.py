@@ -210,7 +210,7 @@ def textdataDeEndpoint(request, textdataID=None):
                 original_text=data["text"],
                 session=sessiondbobj,
                 syllable=syllable_count(data["text"]),
-                type=False
+                short=False
             )
 
             textdata = {
