@@ -12,23 +12,18 @@ from multiprocessing import Process
 
 models = NER().nermodels
 
-def updatevalue(table, column, id, value):
+def updatevalue(connection, table, column, id, value):
 
-    # print(table, column, id, value)
-
-    connection = new_db_connection()
     with connection.cursor() as c:
         c.execute(
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
             [value, str(id).replace("-", "")]
         )
     connection.commit()
-    connection.close()
 
-def addentity(entity, sessionid, entitytype):
+def addentity(connection, entity, sessionid, entitytype):
 
     # print("adding entity")
-    connection = new_db_connection()
     with connection.cursor() as c:
         c.execute(
             'SELECT COUNT(id) FROM REST_entity '
@@ -37,11 +32,9 @@ def addentity(entity, sessionid, entitytype):
         )
         result = c.fetchone()
     connection.commit()
-    connection.close()
 
     (count, ) = result
 
-    connection = new_db_connection()
     if count == 1:
         with connection.cursor() as c:
             c.execute(
@@ -51,7 +44,6 @@ def addentity(entity, sessionid, entitytype):
             )
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
         connection.commit()
-        connection.close()
         return result
 
     else:
@@ -68,11 +60,11 @@ def addentity(entity, sessionid, entitytype):
 
             # print("-----------------------")
         connection.commit()
-        connection.close()
-        return result
 
-def getentities(sessionid):
-    connection = new_db_connection()
+    return result
+
+def getentities(connection, sessionid):
+
     with connection.cursor() as c:
         c.execute(
             'SELECT * FROM REST_entity '
@@ -97,13 +89,20 @@ class de_identify(Process):
         
         # self.models = models
 
+        connection = new_db_connection()
         if textdata["original_text"] == "---ignore---":
-            exit()
+            with connection.cursor() as c:
+                c.execute(
+                    "DELETE FROM restdb.REST_textdata WHERE id=%s",
+                    [textdata["id"]]
+                )
+            connection.commit()
 
+        self.connection = connection
         self.textdata: dict = textdata
         self.session: dict = session
         self.language: str = self.session["language"]
-        self.entities: list = getentities(self.session["id"])
+        self.entities: list = getentities(self.connection, self.session["id"])
         self.model: str = ""
         self.modeltype: str = ""
         self.snomed_edition: str = ""
@@ -120,7 +119,7 @@ class de_identify(Process):
         step 4: anonimze the text with placeholders.
         """
 
-        updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+        updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         self.languageProcessor()
 
@@ -130,7 +129,7 @@ class de_identify(Process):
 
         self.NEApplier()
 
-        updatevalue("textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+        updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         exit()
 
@@ -148,8 +147,8 @@ class de_identify(Process):
 
         (self.model, self.modeltype, self.snomededition) = models[self.language]
 
-        updatevalue("session", "language", self.session["id"], language_code)
-        updatevalue("textdata", "status", self.textdata["id"], 2)
+        updatevalue(self.connection, "session", "language", self.session["id"], language_code)
+        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 2)
 
     def NERDetection(self):
 
@@ -157,17 +156,17 @@ class de_identify(Process):
         result_entities = nerPerformer(models[self.language], self.textdata["original_text"])
 
         # Store entities in database
-        updatevalue("textdata", "entities", self.textdata["id"], json.dumps(result_entities))
+        updatevalue(self.connection, "textdata", "entities", self.textdata["id"], json.dumps(result_entities))
 
         # Go over entities to store them seperately
         for entity in result_entities:
             # add created entity to class
-            addentity(entity, self.session["id"], result_entities[entity])
+            addentity(self.connection, entity, self.session["id"], result_entities[entity])
 
-        self.entities = getentities(self.session["id"])
+        self.entities = getentities(self.connection, self.session["id"])
 
         # Set status for sentence
-        updatevalue("textdata", "status", self.textdata["id"], 3)
+        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 3)
 
     def EntityClassification(self):
 
@@ -212,14 +211,14 @@ class de_identify(Process):
 
             int = random.randint(0, 3)
             if entity["out_entity"] is None:
-                updatevalue("entity", "out_entity", entity["id"], names[int])
+                updatevalue(self.connection, "entity", "out_entity", entity["id"], names[int])
 
         sentence = self.textdata["original_text"]
 
-        self.entities = getentities(self.session["id"])
+        self.entities = getentities(self.connection, self.session["id"])
 
         for entity in self.entities:
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
-        updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)
+        updatevalue(self.connection, "textdata", "replacement_text", self.textdata["id"], sentence)
 
