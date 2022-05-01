@@ -34,6 +34,10 @@ def nerPerformer(processdata, text):
 
     if z == "transformer":
 
+        print(x)
+        print(text)
+        print(x(text))
+
         modeloutput = x(text)
 
         print(modeloutput)

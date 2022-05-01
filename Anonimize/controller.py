@@ -160,8 +160,8 @@ class de_identify(Process):
 
         # Go over entities to store them seperately
         for entity in result_entities:
-            addentity(entity, self.session["id"], result_entities[entity])
             # add created entity to class
+            addentity(entity, self.session["id"], result_entities[entity])
 
         self.entities = getentities(self.session["id"])
 
