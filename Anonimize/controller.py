@@ -98,6 +98,7 @@ class de_identify(Process):
                 )
             connection.commit()
             connection.close()
+            self.terminate()
 
         self.connection = connection
         self.textdata: dict = textdata
