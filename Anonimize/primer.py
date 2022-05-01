@@ -12,7 +12,7 @@ def main():
         requests.post(
             "http://192.168.1.175:8001/textdedata",
             json={
-                "text": "---ignore----",
+                "text": "---ignore---",
                 "sessionID": primersesh
             },
             timeout=0.000000001)

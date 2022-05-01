@@ -96,6 +96,10 @@ class de_identify(Process):
     def __init__(self, textdata, session):
         
         # self.models = models
+
+        if textdata["original_text"] == "---ignore---":
+            exit()
+
         self.textdata: dict = textdata
         self.session: dict = session
         self.language: str = self.session["language"]
