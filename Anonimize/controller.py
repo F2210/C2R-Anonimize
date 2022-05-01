@@ -98,7 +98,6 @@ class de_identify(Process):
                 )
             connection.commit()
             connection.close()
-            exit()
 
         self.connection = connection
         self.textdata: dict = textdata
@@ -133,7 +132,7 @@ class de_identify(Process):
 
         updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        exit()
+        return
 
     def languageProcessor(self):
 
