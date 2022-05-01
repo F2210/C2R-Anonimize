@@ -16,7 +16,7 @@ def nerPerformer(processdata, text):
     """
     (x, y, z) = processdata
 
-    print(processdata)
+    del processdata
 
     result = None
 
@@ -34,13 +34,7 @@ def nerPerformer(processdata, text):
 
     if z == "transformer":
 
-        print(x)
-        print(text)
-        print(x(text))
-
         modeloutput = x(text)
-
-        print(modeloutput)
 
         result = pipelineType.resultProcessor(text, modeloutput)
 
