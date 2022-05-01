@@ -88,7 +88,7 @@ class de_identify(Process):
     def __init__(self, textdata, session):
         
         # self.models = models
-
+        self.terminated = False
         connection = new_db_connection()
         if textdata["original_text"] == "---ignore---":
             with connection.cursor() as c:
@@ -97,8 +97,7 @@ class de_identify(Process):
                     [str(textdata["id"]).replace("-", "")]
                 )
             connection.commit()
-            connection.close()
-            self.terminate()
+            self.terminated = True
 
         self.connection = connection
         self.textdata: dict = textdata
@@ -120,6 +119,9 @@ class de_identify(Process):
         step 3: classify the entities and decide whether they should be anonimized in the output after C2R processing.
         step 4: anonimze the text with placeholders.
         """
+
+        if self.terminated:
+            self.terminate()
 
         updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
