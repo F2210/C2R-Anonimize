@@ -79,7 +79,6 @@ def getentities(connection, sessionid):
             entities.append(dict(zip([column[0] for column in c.description], entity)))
 
         connection.commit()
-        connection.close()
 
     return entities
 
@@ -135,7 +134,8 @@ class de_identify(Process):
 
         updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        self.terminate()
+        self.connection.close()
+        return
 
     def languageProcessor(self):
 
