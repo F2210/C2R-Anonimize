@@ -108,7 +108,7 @@ class de_identify(Process):
         self.modeltype: str = ""
         self.snomed_edition: str = ""
         self.snomed_version: str = ""
-        super().__init__()
+        super(de_identify, self).__init__()
 
     def run(self):
 
@@ -121,7 +121,7 @@ class de_identify(Process):
         """
 
         if self.terminated:
-            self.terminate()
+            return
 
         updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
