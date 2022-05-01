@@ -22,14 +22,9 @@ def resultProcessor(text, results):
 
     text = text + " "
 
-    resultdict = {}
-
     entityset = []
 
-    print("processing results")
     processedresults = []
-
-    print(results)
 
     for entity in results[::-1]:
 
@@ -59,7 +54,6 @@ def resultProcessor(text, results):
                     notFound = False
                 endslice += 1
 
-            print("yeeehaw")
 
             endslice -= 1
             entityset = []
@@ -76,8 +70,6 @@ def resultProcessor(text, results):
     resultdict = {}
     if processedresults != []:
         for entity in processedresults:
-            # print("finding: ", entity)
             resultdict = findEntity(resultdict, text, entity)
 
-    # print("processed results")
     return resultdict
