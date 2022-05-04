@@ -34,9 +34,7 @@ def nerPerformer(processdata, text):
 
     if z == "transformer":
 
-        modeloutput = x(text)
-
-        result = pipelineType.resultProcessor(text, modeloutput)
+        result = pipelineType.resultProcessor(text, x(text))
 
     if result is None:
         Exception("The model was not set correctly. The type has to be either Flair or Transformer.")

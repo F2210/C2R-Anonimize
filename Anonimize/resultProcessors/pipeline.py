@@ -26,6 +26,8 @@ def resultProcessor(text, results):
 
     processedresults = []
 
+    print(results)
+
     for entity in results[::-1]:
 
         if "I" in entity["entity"]:
