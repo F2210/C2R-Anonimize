@@ -183,7 +183,7 @@ def testerBULK():
 
             syllables = syllable_count(sentence)
 
-            seccount = syllables / 8
+            seccount = syllables / 6.3
             count += 1
             time.sleep(seccount)
 
