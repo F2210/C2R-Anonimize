@@ -171,10 +171,10 @@ def testerBULK():
                 requests.post(
                     "http://192.168.1.175:8001/textdedata",
                     json={
-                        "text": sentence.strip().lower(),
+                        "text": sentence.strip(),
                         "sessionID": seshs[conv]
                     },
-                    timeout=5)
+                    timeout=0.0001)
 
             except requests.exceptions.ReadTimeout:
                 pass
@@ -188,38 +188,6 @@ def testerBULK():
             time.sleep(seccount)
 
         time.sleep(30)
-
-# def testerBULK():
-#
-#     sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
-#                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
-#         "ID"]
-#
-#     print("bulktest: ", sesh4)
-#     print("start", datetime.datetime.now().timestamp())
-#
-#     count = 0
-#     for sentence in convo:
-#
-#             try:
-#                 requests.post(
-#                     "http://192.168.1.175:8001/textdedata",
-#                     json={
-#                         "text": sentence.strip().lower(),
-#                         "sessionID": sesh4
-#                     },
-#                     timeout=5)
-#
-#             except requests.exceptions.ReadTimeout:
-#                 pass
-#             except requests.exceptions.ConnectTimeout:
-#                 pass
-#
-#             syllables = syllable_count(sentence)
-#
-#             seccount = syllables / 8
-#             count += 1
-#             time.sleep(seccount)
 
 
 def testerSingleSentence():
