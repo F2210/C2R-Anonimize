@@ -227,7 +227,6 @@ def textdataDeEndpoint(request, textdataID=None):
             process = de_identify(textdata, session)
             process.daemon = True
             process.start()
-            process.join()
 
             returndata = {
                 "status_code": 200,
