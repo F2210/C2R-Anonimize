@@ -82,8 +82,8 @@ DATABASES = {
         'NAME': 'restdb',
         'HOST': 'localhost',
         'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': '',
+        'USER': 'jbroeren',
+        'PASSWORD': 'Hello123!!*',
     }
 }
 

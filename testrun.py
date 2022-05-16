@@ -42,17 +42,17 @@ Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 
 # print(len(convo))
 
-sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+sesh1 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"][
         "ID"]
-sesh2 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+sesh2 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 2)}).json()["response_data"][
         "ID"]
-sesh3 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+sesh3 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 3)}).json()["response_data"][
         "ID"]
 
-sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+sesh4 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
         "ID"]
 
@@ -62,17 +62,17 @@ convos = [conv1, conv2, conv3, conv4]
 seshs = [sesh1, sesh2, sesh3, sesh4]
 
 def testerConvo():
-    sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+    sesh1 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"][
         "ID"]
-    sesh2 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+    sesh2 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 2)}).json()["response_data"][
         "ID"]
-    sesh3 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+    sesh3 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 3)}).json()["response_data"][
         "ID"]
 
-    sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+    sesh4 = requests.post("http://192.168.1.175/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
         "ID"]
 
@@ -87,7 +87,7 @@ def testerConvo():
             try:
                 try:
                     requests.post(
-                        "http://192.168.1.175:8001/textdedata",
+                        "http://192.168.1.175/textdedata",
                         json={
                             "text": convos[conv][sentencecount],
                             "sessionID": seshs[conv]
@@ -169,7 +169,7 @@ def testerBULK():
 
             try:
                 requests.post(
-                    "http://192.168.1.175:8001/textdedata",
+                    "http://192.168.1.175/textdedata",
                     json={
                         "text": sentence.strip(),
                         "sessionID": seshs[conv]
@@ -188,7 +188,6 @@ def testerBULK():
             time.sleep(seccount)
 
         time.sleep(30)
-
 
 def testerSingleSentence():
 
