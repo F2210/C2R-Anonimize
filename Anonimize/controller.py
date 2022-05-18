@@ -22,6 +22,8 @@ def updatevalue(connection, table, column, id, value):
             [value, str(id).replace("-", "")]
         )
 
+    connection.commit()
+
 def addentity(connection, entity, sessionid, entitytype):
 
     connection = new_db_connection()
@@ -61,6 +63,8 @@ def addentity(connection, entity, sessionid, entitytype):
 
             # print("-----------------------")
 
+    connection.commit()
+
     return result
 
 def getentities(connection, sessionid):
@@ -79,6 +83,8 @@ def getentities(connection, sessionid):
 
         for entity in result:
             entities.append(dict(zip([column[0] for column in c.description], entity)))
+
+    connection.commit()
 
     return entities
 
@@ -134,7 +140,6 @@ class de_identify(Process):
 
             updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        self.connection.commit()
         return
 
     def languageProcessor(self):
