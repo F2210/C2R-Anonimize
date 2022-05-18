@@ -1,6 +1,6 @@
 import datetime
 import random, requests, time
-
+import asyncio
 
 conv1 = "Hoi Ik ben Jacco. Hoi aangenaam, Ik ben dr Vreeswijk, Wat kan ik voor je doen. Ik heb last van mijn scheenbeen. Ik heb 1 grote rode plek en ik weet niet echt wat het is. Oké, Laten we dan eens gaan kijken waar je last van hebt, meneer Broeren. Als je even naar de behandeltafel wandelt en daar gaat zitten, kijken ik even. Oké, Dit is inderdaad een rode plek. Doet het pijn als ik hier duw. Klein beetje het zeurt wat. En Als ik hier duw. Ja dat doet pijn. Oké ga er maar weer zitten. U heeft een onderhuids ontsteking. Mocht die groter worden, of als u last van koorts krijgt, dan moet u even bellen en dan moeten we even opnieuw kijken. Misschien moet u dan antibiotica. Maar vooralsnog nog ziet het er goed uit. Omcirkel de plek die rood is en doe dat dan over 24 uur nog een keer. Als het dan dus groter is geworden, dan mag u even contact opnemen.".split(".")
 
@@ -42,7 +42,6 @@ Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 
 # print(len(convo))
 print("starting")
-
 
 sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"][
@@ -157,15 +156,14 @@ def testerNER():
 
     time.sleep(5)
 
-@sync_to_async
-def sender(sentence, sessionid):
+async def sender(sentence, sessionid):
     requests.post(
         "http://192.168.1.175:8001/textdedata",
         json={
             "text": sentence,
             "sessionID": sessionid
         },
-        timeout=5)
+        timeout=10)
 
 
 

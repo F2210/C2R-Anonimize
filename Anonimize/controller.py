@@ -134,7 +134,6 @@ class de_identify(Process):
 
         updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        self.connection.close()
         return
 
     def languageProcessor(self):
