@@ -12,67 +12,60 @@ from multiprocessing import Process
 
 models = NER().nermodels
 
-def updatevalue(connection, table, column, id, value):
+def updatevalue(cursor, table, column, id, value):
 
-    with connection.cursor() as c:
-        c.execute(
+    cursor.execute(
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
             [value, str(id).replace("-", "")]
         )
 
-def addentity(connection, entity, sessionid, entitytype):
+def addentity(cursor, entity, sessionid, entitytype):
 
     # print("adding entity")
-    with connection.cursor() as c:
-        c.execute(
-            'SELECT COUNT(id) FROM REST_entity '
-            'WHERE in_entity=%s AND session_id=%s',
-            [entity, str(sessionid).replace("-", "")]
-        )
-        result = c.fetchone()
+    cursor.execute(
+        'SELECT COUNT(id) FROM REST_entity '
+        'WHERE in_entity=%s AND session_id=%s',
+        [entity, str(sessionid).replace("-", "")]
+    )
+    result = cursor.fetchone()
 
     (count, ) = result
 
     if count == 1:
-        with connection.cursor() as c:
-            c.execute(
-                'SELECT * FROM REST_entity '
-                'WHERE in_entity=%s ',
-                [entity]
-            )
-            result = dict(zip([column[0] for column in c.description], c.fetchone()))
+        cursor.execute(
+            'SELECT * FROM REST_entity '
+            'WHERE in_entity=%s ',
+            [entity]
+        )
+        result = dict(zip([column[0] for column in cursor.description], cursor.fetchone()))
         return result
 
     else:
-        with connection.cursor() as c:
 
-            textid = str(uuid.uuid4()).replace("-", "")
+        textid = str(uuid.uuid4()).replace("-", "")
 
-            c.execute(
-                'INSERT INTO REST_entity'
-                '(id, in_entity, type_entity, session_id) VALUES '
-                '(%s, %s, %s, %s)',
-                [textid, entity, entitytype, str(sessionid).replace("-", "")]
-            )
-
-            # print("-----------------------")
+        cursor.execute(
+            'INSERT INTO REST_entity'
+            '(id, in_entity, type_entity, session_id) VALUES '
+            '(%s, %s, %s, %s)',
+            [textid, entity, entitytype, str(sessionid).replace("-", "")]
+        )
 
     return result
 
-def getentities(connection, sessionid):
+def getentities(cursor, sessionid):
 
-    with connection.cursor() as c:
-        c.execute(
-            'SELECT * FROM REST_entity '
-            'WHERE session_id=%s ',
-            [str(sessionid).replace("-", "")]
-        )
-        result = c.fetchall()
+    cursor.execute(
+        'SELECT * FROM REST_entity '
+        'WHERE session_id=%s ',
+        [str(sessionid).replace("-", "")]
+    )
+    result = cursor.fetchall()
 
-        entities = []
+    entities = []
 
-        for entity in result:
-            entities.append(dict(zip([column[0] for column in c.description], entity)))
+    for entity in result:
+        entities.append(dict(zip([column[0] for column in c.description], entity)))
 
     return entities
 
@@ -81,24 +74,25 @@ class de_identify(Process):
     def __init__(self, textdata, session):
 
         connection = new_db_connection()
+        self.connection = connection
+        self.cursor = connection.cursor()
 
         # self.models = models
         self.terminated = False
 
         if textdata["original_text"] == "---ignore---":
-            with connection.cursor() as c:
-                c.execute(
-                    "DELETE FROM restdb.REST_textdata WHERE id=%s",
-                    [str(textdata["id"]).replace("-", "")]
-                )
+
+            self.cursor.execute(
+                "DELETE FROM restdb.REST_textdata WHERE id=%s",
+                [str(textdata["id"]).replace("-", "")]
+            )
             connection.commit()
             self.terminated = True
 
-        self.connection = connection
         self.textdata: dict = textdata
         self.session: dict = session
         self.language: str = self.session["language"]
-        self.entities: list = getentities(self.connection, self.session["id"])
+        self.entities: list = getentities(self.cursor, self.session["id"])
         self.model: str = ""
         self.modeltype: str = ""
         self.snomed_edition: str = ""
@@ -118,7 +112,7 @@ class de_identify(Process):
         if self.terminated:
             return
 
-        updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+        updatevalue(self.cursor, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         self.languageProcessor()
 
@@ -128,7 +122,7 @@ class de_identify(Process):
 
         self.NEApplier()
 
-        updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+        updatevalue(self.cursor, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
         self.connection.commit()
         return
 
@@ -146,8 +140,8 @@ class de_identify(Process):
 
         (self.model, self.modeltype, self.snomededition) = models[self.language]
 
-        updatevalue(self.connection, "session", "language", self.session["id"], language_code)
-        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 2)
+        updatevalue(self.cursor, "session", "language", self.session["id"], language_code)
+        updatevalue(self.cursor, "textdata", "status", self.textdata["id"], 2)
 
     def NERDetection(self):
 
@@ -155,17 +149,17 @@ class de_identify(Process):
         result_entities = nerPerformer(models[self.language], self.textdata["original_text"])
 
         # Store entities in database
-        updatevalue(self.connection, "textdata", "entities", self.textdata["id"], json.dumps(result_entities))
+        updatevalue(self.cursor, "textdata", "entities", self.textdata["id"], json.dumps(result_entities))
 
         # Go over entities to store them seperately
         for entity in result_entities:
             # add created entity to class
-            addentity(self.connection, entity, self.session["id"], result_entities[entity])
+            addentity(self.cursor, entity, self.session["id"], result_entities[entity])
 
-        self.entities = getentities(self.connection, self.session["id"])
+        self.entities = getentities(self.cursor, self.session["id"])
 
         # Set status for sentence
-        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 3)
+        updatevalue(self.cursor, "textdata", "status", self.textdata["id"], 3)
 
     def EntityClassification(self):
 
@@ -210,13 +204,13 @@ class de_identify(Process):
 
             int = random.randint(0, 3)
             if entity["out_entity"] is None:
-                updatevalue(self.connection, "entity", "out_entity", entity["id"], names[int])
+                updatevalue(self.cursor, "entity", "out_entity", entity["id"], names[int])
 
         sentence = self.textdata["original_text"]
 
-        self.entities = getentities(self.connection, self.session["id"])
+        self.entities = getentities(self.cursor, self.session["id"])
 
         for entity in self.entities:
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
-        updatevalue(self.connection, "textdata", "replacement_text", self.textdata["id"], sentence)
+        updatevalue(self.cursor, "textdata", "replacement_text", self.textdata["id"], sentence)
