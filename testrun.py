@@ -41,6 +41,8 @@ Is tweeënnegentig geworden. Was ook een Hendriks, dus een zus van mijn vader.
 # convo = conv1 + conv2 + conv3 + conv4
 
 # print(len(convo))
+print("starting")
+
 
 sesh1 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
                           json={"sessionID": str(datetime.datetime.now().timestamp() + 1)}).json()["response_data"][
