@@ -155,6 +155,18 @@ def testerNER():
 
     time.sleep(5)
 
+@sync_to_async
+def sender(sentence, sessionid):
+    requests.post(
+        "http://192.168.1.175:8001/textdedata",
+        json={
+            "text": sentence,
+            "sessionID": sessionid
+        },
+        timeout=5)
+
+
+
 def testerBULK():
 
     count = 0
@@ -167,24 +179,7 @@ def testerBULK():
 
         for sentence in convo:
 
-            notSent = True
-
-            while notSent:
-                try:
-                    requests.post(
-                        "http://192.168.1.175:8001/textdedata",
-                        json={
-                            "text": sentence.strip(),
-                            "sessionID": seshs[conv]
-                        },
-                        timeout=5)
-
-                except requests.exceptions.ReadTimeout:
-                    print("error")
-                except requests.exceptions.ConnectTimeout:
-                    pass
-                else:
-                    notSent = False
+            asyncio.run(sender(sentence.strip(), seshs[conv]))
 
             syllables = syllable_count(sentence)
             time.sleep(syllables / 8)
