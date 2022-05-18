@@ -2,8 +2,6 @@ import datetime
 import random
 import uuid
 
-from Anonimize.db import new_db_connection
-
 from .language import NER, nerPerformer
 from .models import nermodels
 import json
@@ -71,10 +69,8 @@ def getentities(cursor, sessionid):
 
 class de_identify(Process):
 
-    def __init__(self, textdata, session):
+    def __init__(self, textdata, session, connection):
 
-        connection = new_db_connection()
-        self.connection = connection
         self.cursor = connection.cursor()
 
         # self.models = models

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from REST.models import *
 import json
-
+from Anonimize.db import new_db_connection
 from Anonimize.controller import de_identify
 
 @csrf_exempt
@@ -224,7 +224,8 @@ def textdataDeEndpoint(request, textdataID=None):
                 "language": sessiondbobj.language
             }
 
-            process = de_identify(textdata, session)
+            connection = new_db_connection()
+            process = de_identify(textdata, session, connection)
             process.daemon = True
             process.start()
 
