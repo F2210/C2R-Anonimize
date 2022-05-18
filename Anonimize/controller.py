@@ -129,7 +129,7 @@ class de_identify(Process):
         self.NEApplier()
 
         updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
-
+        connection = new_db_connection()
         return
 
     def languageProcessor(self):
@@ -220,4 +220,3 @@ class de_identify(Process):
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
         updatevalue(self.connection, "textdata", "replacement_text", self.textdata["id"], sentence)
-        self.connection.commit()
