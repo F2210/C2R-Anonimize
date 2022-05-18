@@ -76,8 +76,6 @@ def getentities(connection, sessionid):
         for entity in result:
             entities.append(dict(zip([column[0] for column in c.description], entity)))
 
-        connection.commit()
-
     return entities
 
 class de_identify(Process):
@@ -150,7 +148,6 @@ class de_identify(Process):
 
         updatevalue(self.connection, "session", "language", self.session["id"], language_code)
         updatevalue(self.connection, "textdata", "status", self.textdata["id"], 2)
-        self.connection.commit()
 
     def NERDetection(self):
 
@@ -169,7 +166,6 @@ class de_identify(Process):
 
         # Set status for sentence
         updatevalue(self.connection, "textdata", "status", self.textdata["id"], 3)
-        self.connection.commit()
 
     def EntityClassification(self):
 
@@ -215,8 +211,6 @@ class de_identify(Process):
             int = random.randint(0, 3)
             if entity["out_entity"] is None:
                 updatevalue(self.connection, "entity", "out_entity", entity["id"], names[int])
-
-        self.connection.commit()
 
         sentence = self.textdata["original_text"]
 
