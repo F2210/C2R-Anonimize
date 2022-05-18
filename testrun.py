@@ -167,21 +167,27 @@ def testerBULK():
 
         for sentence in convo:
 
-            try:
-                requests.post(
-                    "http://192.168.1.175:8001/textdedata",
-                    json={
-                        "text": sentence.strip(),
-                        "sessionID": seshs[conv]
-                    },
-                    timeout=5)
+            notSent = True
 
-            except requests.exceptions.ReadTimeout:
-                pass
-            except requests.exceptions.ConnectTimeout:
-                pass
+            while notSent:
+                try:
+                    requests.post(
+                        "http://192.168.1.175:8001/textdedata",
+                        json={
+                            "text": sentence.strip(),
+                            "sessionID": seshs[conv]
+                        },
+                        timeout=5)
+
+                except requests.exceptions.ReadTimeout:
+                    print("error")
+                except requests.exceptions.ConnectTimeout:
+                    pass
+                else:
+                    notSent = False
 
             syllables = syllable_count(sentence)
+            time.sleep(syllables / 8)
 
         time.sleep(30)
 
