@@ -15,6 +15,5 @@ def new_db_connection():
     except Error as e:
         print(e)
 
-
     if connection is not None and connection.is_connected():
         return connection

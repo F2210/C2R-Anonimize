@@ -19,7 +19,6 @@ def updatevalue(connection, table, column, id, value):
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
             [value, str(id).replace("-", "")]
         )
-    connection.commit()
 
 def addentity(connection, entity, sessionid, entitytype):
 
@@ -31,7 +30,6 @@ def addentity(connection, entity, sessionid, entitytype):
             [entity, str(sessionid).replace("-", "")]
         )
         result = c.fetchone()
-    connection.commit()
 
     (count, ) = result
 
@@ -43,7 +41,6 @@ def addentity(connection, entity, sessionid, entitytype):
                 [entity]
             )
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
-        connection.commit()
         return result
 
     else:
@@ -59,7 +56,6 @@ def addentity(connection, entity, sessionid, entitytype):
             )
 
             # print("-----------------------")
-        connection.commit()
 
     return result
 
@@ -152,6 +148,7 @@ class de_identify(Process):
 
         updatevalue(self.connection, "session", "language", self.session["id"], language_code)
         updatevalue(self.connection, "textdata", "status", self.textdata["id"], 2)
+        self.connection.commit()
 
     def NERDetection(self):
 
@@ -170,6 +167,7 @@ class de_identify(Process):
 
         # Set status for sentence
         updatevalue(self.connection, "textdata", "status", self.textdata["id"], 3)
+        self.connection.commit()
 
     def EntityClassification(self):
 
@@ -216,6 +214,8 @@ class de_identify(Process):
             if entity["out_entity"] is None:
                 updatevalue(self.connection, "entity", "out_entity", entity["id"], names[int])
 
+        self.connection.commit()
+
         sentence = self.textdata["original_text"]
 
         self.entities = getentities(self.connection, self.session["id"])
@@ -224,4 +224,4 @@ class de_identify(Process):
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
         updatevalue(self.connection, "textdata", "replacement_text", self.textdata["id"], sentence)
-
+        self.connection.commit()
