@@ -12,6 +12,8 @@ from multiprocessing import Process
 
 models = NER().nermodels
 
+connection = new_db_connection()
+
 def updatevalue(connection, table, column, id, value):
 
     with connection.cursor() as c:
@@ -84,7 +86,7 @@ class de_identify(Process):
         
         # self.models = models
         self.terminated = False
-        connection = new_db_connection()
+
         if textdata["original_text"] == "---ignore---":
             with connection.cursor() as c:
                 c.execute(
