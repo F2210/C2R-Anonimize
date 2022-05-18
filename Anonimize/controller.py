@@ -14,6 +14,8 @@ models = NER().nermodels
 
 def updatevalue(connection, table, column, id, value):
 
+    connection = new_db_connection()
+
     with connection.cursor() as c:
         c.execute(
             'UPDATE REST_{0} SET {1}=%s WHERE id=%s '.format(table, column),
@@ -21,6 +23,8 @@ def updatevalue(connection, table, column, id, value):
         )
 
 def addentity(connection, entity, sessionid, entitytype):
+
+    connection = new_db_connection()
 
     # print("adding entity")
     with connection.cursor() as c:
@@ -61,6 +65,8 @@ def addentity(connection, entity, sessionid, entitytype):
 
 def getentities(connection, sessionid):
 
+    connection = new_db_connection()
+
     with connection.cursor() as c:
         c.execute(
             'SELECT * FROM REST_entity '
@@ -78,14 +84,12 @@ def getentities(connection, sessionid):
 
 class de_identify(Process):
 
-    def __init__(self, textdata, session, connection):
+    def __init__(self, textdata, session):
 
-        # connection = new_db_connection()
-        self.connection = connection
-        self.cursor = connection.cursor()
-
-        # self.models = models
         self.terminated = False
+
+        connection = new_db_connection()
+        self.connection = connection
 
         if textdata["original_text"] == "---ignore---":
             with connection.cursor() as c:
@@ -93,7 +97,6 @@ class de_identify(Process):
                     "DELETE FROM restdb.REST_textdata WHERE id=%s",
                     [str(textdata["id"]).replace("-", "")]
                 )
-            connection.commit()
             self.terminated = True
 
         self.textdata: dict = textdata
@@ -117,19 +120,20 @@ class de_identify(Process):
         """
 
         if self.terminated:
-            return
+            pass
+        else:
+            updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+            self.languageProcessor()
 
-        self.languageProcessor()
+            self.NERDetection()
 
-        self.NERDetection()
+            self.EntityClassification()
 
-        self.EntityClassification()
+            self.NEApplier()
 
-        self.NEApplier()
+            updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
-        updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
         self.connection.commit()
         return
 

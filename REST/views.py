@@ -224,8 +224,7 @@ def textdataDeEndpoint(request, textdataID=None):
                 "language": sessiondbobj.language
             }
 
-            connection = new_db_connection()
-            process = de_identify(textdata, session, connection)
+            process = de_identify(textdata, session)
             process.daemon = True
             process.start()
 
