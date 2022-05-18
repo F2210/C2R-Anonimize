@@ -47,6 +47,8 @@ def addentity(connection, entity, sessionid, entitytype):
                 [entity]
             )
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
+
+        connection.commit()
         return result
 
     else:
