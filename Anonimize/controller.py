@@ -12,7 +12,7 @@ from multiprocessing import Process
 
 models = NER().nermodels
 
-def updatevalue(connection, table, column, id, value):
+def updatevalue(table, column, id, value):
 
     connection = new_db_connection()
 
@@ -24,7 +24,7 @@ def updatevalue(connection, table, column, id, value):
 
     connection.commit()
 
-def addentity(connection, entity, sessionid, entitytype):
+def addentity(entity, sessionid, entitytype):
 
     connection = new_db_connection()
 
@@ -69,7 +69,7 @@ def addentity(connection, entity, sessionid, entitytype):
 
     return result
 
-def getentities(connection, sessionid):
+def getentities(sessionid):
 
     connection = new_db_connection()
 
@@ -96,21 +96,22 @@ class de_identify(Process):
 
         self.terminated = False
 
-        connection = new_db_connection()
-        self.connection = connection
+        self.connection = new_db_connection()
 
         if textdata["original_text"] == "---ignore---":
+            connection = new_db_connection()
             with connection.cursor() as c:
                 c.execute(
                     "DELETE FROM restdb.REST_textdata WHERE id=%s",
                     [str(textdata["id"]).replace("-", "")]
                 )
+                connection.commit()
             self.terminated = True
 
         self.textdata: dict = textdata
         self.session: dict = session
         self.language: str = self.session["language"]
-        self.entities: list = getentities(self.connection, self.session["id"])
+        self.entities: list = getentities(self.session["id"])
         self.model: str = ""
         self.modeltype: str = ""
         self.snomed_edition: str = ""

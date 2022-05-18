@@ -184,6 +184,7 @@ def testerBULK():
             syllables = syllable_count(sentence)
             time.sleep(syllables / 6.3)
 
+
         time.sleep(30)
 
 def testerSingleSentence():
