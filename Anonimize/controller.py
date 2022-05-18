@@ -12,8 +12,6 @@ from multiprocessing import Process
 
 models = NER().nermodels
 
-connection = new_db_connection()
-
 def updatevalue(connection, table, column, id, value):
 
     with connection.cursor() as c:
@@ -81,7 +79,9 @@ def getentities(connection, sessionid):
 class de_identify(Process):
 
     def __init__(self, textdata, session):
-        
+
+        connection = new_db_connection()
+
         # self.models = models
         self.terminated = False
 
@@ -129,7 +129,7 @@ class de_identify(Process):
         self.NEApplier()
 
         updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
-        connection = new_db_connection()
+        self.connection.commit()
         return
 
     def languageProcessor(self):
