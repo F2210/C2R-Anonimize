@@ -131,7 +131,7 @@ class de_identify(Process):
         if self.terminated:
             pass
         else:
-            updatevalue(self.connection, "textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+            updatevalue("textdata", "time_start", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
             self.languageProcessor()
 
@@ -141,7 +141,7 @@ class de_identify(Process):
 
             self.NEApplier()
 
-            updatevalue(self.connection, "textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
+            updatevalue("textdata", "time_end", str(self.textdata["id"]).replace("-", ""), float(datetime.datetime.now().timestamp()))
 
         return
 
@@ -159,8 +159,8 @@ class de_identify(Process):
 
         (self.model, self.modeltype, self.snomededition) = models[self.language]
 
-        updatevalue(self.connection, "session", "language", self.session["id"], language_code)
-        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 2)
+        updatevalue("session", "language", self.session["id"], language_code)
+        updatevalue("textdata", "status", self.textdata["id"], 2)
 
     def NERDetection(self):
 
@@ -168,17 +168,17 @@ class de_identify(Process):
         result_entities = nerPerformer(models[self.language], self.textdata["original_text"])
 
         # Store entities in database
-        updatevalue(self.connection, "textdata", "entities", self.textdata["id"], json.dumps(result_entities))
+        updatevalue("textdata", "entities", self.textdata["id"], json.dumps(result_entities))
 
         # Go over entities to store them seperately
         for entity in result_entities:
             # add created entity to class
-            addentity(self.connection, entity, self.session["id"], result_entities[entity])
+            addentity(entity, self.session["id"], result_entities[entity])
 
-        self.entities = getentities(self.connection, self.session["id"])
+        self.entities = getentities(self.session["id"])
 
         # Set status for sentence
-        updatevalue(self.connection, "textdata", "status", self.textdata["id"], 3)
+        updatevalue("textdata", "status", self.textdata["id"], 3)
 
     def EntityClassification(self):
 
@@ -223,13 +223,13 @@ class de_identify(Process):
 
             int = random.randint(0, 3)
             if entity["out_entity"] is None:
-                updatevalue(self.connection, "entity", "out_entity", entity["id"], names[int])
+                updatevalue("entity", "out_entity", entity["id"], names[int])
 
         sentence = self.textdata["original_text"]
 
-        self.entities = getentities(self.connection, self.session["id"])
+        self.entities = getentities(self.session["id"])
 
         for entity in self.entities:
             sentence = sentence.lower().replace(entity["in_entity"].lower(), entity["out_entity"].lower())
 
-        updatevalue(self.connection, "textdata", "replacement_text", self.textdata["id"], sentence)
+        updatevalue("textdata", "replacement_text", self.textdata["id"], sentence)

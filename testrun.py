@@ -169,8 +169,6 @@ async def sender(sentence, sessionid):
 
 def testerBULK():
 
-    count = 0
-
     for conv in range(0, 4):
         convo = convos[conv]
 
@@ -186,6 +184,35 @@ def testerBULK():
 
 
         time.sleep(30)
+
+
+def hypoTester():
+
+    conv = [
+        "Tom",
+        "Hallo mijn naam is Tom",
+        "Hallo mijn naam is Tom en ik roei iedere dag",
+        "Hallo mijn naam is Tom en ik roei iedere dag op mijn favoriete roeivereniging Triton"
+    ]
+
+
+    for i in range(0, len(conv)):
+
+        sesh = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
+                              json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
+            "ID"]
+
+        for j in range(0, 20):
+
+                sentence = conv[i]
+
+                asyncio.run(sender(sentence.strip(), sesh))
+
+                syllables = syllable_count(sentence)
+                time.sleep(syllables / 6.3)
+
+        time.sleep(30)
+
 
 def testerSingleSentence():
 
@@ -222,7 +249,7 @@ def testerSingleSentence():
 print("starting")
 # testerConvo()
 testerBULK()
-# time.sleep(120)
+
 # testerSingleSentence()
 # time.sleep(120)
 # testerSingleSentence()
