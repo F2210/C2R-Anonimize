@@ -43,10 +43,13 @@ def addentity(entity, sessionid, entitytype):
         with connection.cursor() as c:
             c.execute(
                 'SELECT * FROM REST_entity '
-                'WHERE in_entity=%s ',
-                [entity]
+                'WHERE in_entity=%s AND session_id=%s LIMIT 1',
+                [entity, str(sessionid).replace("-", "")]
             )
+
             result = dict(zip([column[0] for column in c.description], c.fetchone()))
+
+            c.fetchall()
 
         connection.commit()
         return result
