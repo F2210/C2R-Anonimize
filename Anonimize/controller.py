@@ -220,9 +220,9 @@ class de_identify(Process):
         # if the enity is not an eponym of a disease
 
         for entity in self.entities:
-            names = ["Mark", "Tom", "Erik", "Peter"]
+            names = ["Bobby", "Noa", "Daan", "Alex", "Jessie", "Jip", "Anne", "Ollie", "Sam", "Guus"]
 
-            int = random.randint(0, 3)
+            int = random.randint(0, 9)
             if entity["out_entity"] is None:
                 updatevalue("entity", "out_entity", entity["id"], names[int])
 

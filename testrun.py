@@ -192,15 +192,18 @@ def hypoTester():
         "Tom",
         "Hallo mijn naam is Tom",
         "Hallo mijn naam is Tom en ik roei iedere dag",
-        "Hallo mijn naam is Tom en ik roei iedere dag op mijn favoriete roeivereniging Triton"
+        "Hallo mijn naam is Tom en ik roei iedere dag "
+        "op mijn favoriete roeivereniging Triton"
     ]
 
 
     for i in range(0, len(conv)):
 
-        sesh = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
-                              json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
-            "ID"]
+        sesh = requests.post(
+            "http://192.168.1.175:8001/sessiondata?type=open",
+            json={
+                "sessionID": str(datetime.datetime.now().timestamp() + 4)
+            }).json()["response_data"]["ID"]
 
         for j in range(0, 30):
 
@@ -213,38 +216,25 @@ def hypoTester():
 
         time.sleep(120)
 
+def multilinguality():
 
-def testerSingleSentence():
+    sentence_EN = "Peter has a sore ankle."
+    sentence_SP = "Mateo tiene un tobillo dolorido"
+    sentence_NL = "Jan heeft een pijnlijke enkel"
+    sentence_DE = "Arend hat eine wunden Knöckel"
+    sentence_FR = "Lance a une cheville douloureuse"
 
-    sesh4 = requests.post("http://192.168.1.175:8001/sessiondata?type=open",
-                          json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
-        "ID"]
+    sentences = [sentence_DE, sentence_FR, sentence_SP, sentence_NL, sentence_EN]
 
-    print(sesh4)
-    print(datetime.datetime.now().timestamp())
+    for sentence in sentences:
 
-    count = 0
-
-    try:
-        requests.post(
-            "http://192.168.1. "
-            ":8001/textdedata",
+        sesh = requests.post(
+            "http://192.168.1.175:8001/sessiondata?type=open",
             json={
-                "text": "Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.",
-                "sessionID": sesh4
-            },
-            timeout=5)
+                "sessionID": str(datetime.datetime.now().timestamp() + 4)
+            }).json()["response_data"]["ID"]
 
-    except requests.exceptions.ReadTimeout:
-        pass
-    except requests.exceptions.ConnectTimeout:
-        pass
-
-    syllables = syllable_count("Dat Malte op een motorboot zat, hij coachte echt goed op zeer specifieke punten.")
-
-    seccount = syllables / 8
-    count += 1
-    time.sleep(seccount)
+        asyncio.run(sender(sentence.strip(), sesh))
 
 print("starting")
 # testerConvo()
