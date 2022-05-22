@@ -248,7 +248,7 @@ def testerSingleSentence():
 
 print("starting")
 # testerConvo()
-testerBULK()
+hypoTester()
 
 # testerSingleSentence()
 # time.sleep(120)
