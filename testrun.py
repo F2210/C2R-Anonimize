@@ -202,7 +202,7 @@ def hypoTester():
                               json={"sessionID": str(datetime.datetime.now().timestamp() + 4)}).json()["response_data"][
             "ID"]
 
-        for j in range(0, 20):
+        for j in range(0, 30):
 
                 sentence = conv[i]
 
