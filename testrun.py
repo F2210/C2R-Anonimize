@@ -211,7 +211,7 @@ def hypoTester():
                 syllables = syllable_count(sentence)
                 time.sleep(syllables / 6.3)
 
-        time.sleep(30)
+        time.sleep(120)
 
 
 def testerSingleSentence():
