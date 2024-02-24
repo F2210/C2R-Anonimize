@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = ""
 
 restart_sequence = "\n"
 
